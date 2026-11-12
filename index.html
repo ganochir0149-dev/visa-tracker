@@ -1,108 +1,352 @@
 
 <!DOCTYPE html>
-<html lang="mn" class="h-full bg-slate-900">
+<html lang="mn" class="h-full">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#081426">
+  <meta name="description" content="БНСУ-ын визний хүсэлт илгээх болон мэдүүлгийн явц хянах систем.">
   <title>VISA TRACKER — БНСУ-ын Визний Явц Хянах Систем</title>
+
   <script src="https://cdn.tailwindcss.com"></script>
   <script src="https://unpkg.com/lucide@latest"></script>
+
   <style>
-    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
-    body { font-family: 'Inter', sans-serif; }
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
+
+    :root {
+      --bg: #081426;
+      --surface: #11233c;
+      --surface2: #172d49;
+      --blue: #2563eb;
+      --cyan: #38bdf8;
+      --line: rgba(148,163,184,.16);
+    }
+
+    * { box-sizing: border-box; }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: Inter, sans-serif;
+      background:
+        radial-gradient(ellipse at 50% -10%, rgba(37,99,235,.22), transparent 48%),
+        linear-gradient(145deg,#081426,#0d1b30 60%,#101d32);
+      color: #f8fafc;
+      min-height: 100vh;
+    }
+
+    button,input,select,textarea { font: inherit; }
+
+    button { transition: .2s ease; }
+
+    button:disabled { opacity: .55; cursor: not-allowed; }
+
+    .glass {
+      background: rgba(17,35,60,.78);
+      border: 1px solid var(--line);
+      backdrop-filter: blur(16px);
+    }
+
+    .brand-gradient {
+      background: linear-gradient(110deg,#2563eb,#0891b2);
+    }
+
+    .primary-btn {
+      background: linear-gradient(110deg,#2563eb,#0284c7);
+      box-shadow: 0 8px 24px rgba(37,99,235,.2);
+    }
+
+    .primary-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 12px 28px rgba(37,99,235,.32);
+    }
+
+    .field {
+      width: 100%;
+      min-height: 48px;
+      padding: 12px 14px;
+      background: #0a192d;
+      color: white;
+      border: 1px solid rgba(148,163,184,.2);
+      border-radius: 12px;
+      outline: none;
+      transition: .2s;
+    }
+
+    .field:focus {
+      border-color: #38bdf8;
+      box-shadow: 0 0 0 3px rgba(56,189,248,.12);
+    }
+
+    .field::placeholder { color: #64748b; }
+
+    .modal-backdrop {
+      background: rgba(2,8,20,.82);
+      backdrop-filter: blur(12px);
+    }
+
+    .modal-card {
+      background: #13243b;
+      border: 1px solid rgba(148,163,184,.2);
+      border-radius: 24px;
+      box-shadow: 0 30px 90px rgba(0,0,0,.5);
+      max-height: 90vh;
+      overflow-y: auto;
+    }
+
+    .feature-card {
+      background: linear-gradient(145deg,rgba(24,43,69,.92),rgba(15,29,49,.92));
+      border: 1px solid var(--line);
+      transition: .25s;
+    }
+
+    .feature-card:hover {
+      transform: translateY(-5px);
+      border-color: rgba(56,189,248,.4);
+      box-shadow: 0 18px 35px rgba(0,0,0,.2);
+    }
+
+    .step-line {
+      position: absolute;
+      left: 15px;
+      top: 32px;
+      bottom: -12px;
+      width: 2px;
+      background: #334155;
+    }
+
+    .step:last-child .step-line { display: none; }
+
+    .step.done .step-line { background: #2563eb; }
+
+    .status-dot {
+      width: 31px;
+      height: 31px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 50%;
+      position: relative;
+      z-index: 1;
+      flex-shrink: 0;
+    }
+
+    .admin-table th {
+      white-space: nowrap;
+      color: #94a3b8;
+      font-size: 11px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: .05em;
+    }
+
+    .admin-table td { vertical-align: middle; }
+
+    .admin-table tbody tr:hover {
+      background: rgba(59,130,246,.07);
+    }
+
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(12px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .animate-up { animation: fadeUp .5s ease both; }
+
+    @media(max-width:640px) {
+      .desktop-nav-label { display: none; }
+      .admin-table { min-width: 850px; }
+    }
+
+    @media(prefers-reduced-motion: reduce) {
+      *,*::before,*::after {
+        animation-duration: .01ms !important;
+        transition-duration: .01ms !important;
+        scroll-behavior: auto !important;
+      }
+    }
   </style>
 </head>
-<body class="h-full min-h-screen text-slate-100 flex flex-col justify-between">
+
+<body class="flex min-h-screen flex-col">
 
   <!-- HEADER -->
-  <header class="bg-slate-800/80 backdrop-blur border-b border-slate-700 sticky top-0 z-40">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
-      <div class="flex items-center space-x-3 cursor-pointer" onclick="switchTab('public')">
-        <div class="bg-gradient-to-tr from-blue-600 to-cyan-500 p-2 rounded-xl text-white shadow-lg shadow-blue-500/30">
-          <i data-lucide="plane-takeoff" class="w-6 h-6"></i>
-        </div>
-        <div>
-          <span class="font-bold text-lg tracking-wider text-white">VISA<span class="text-blue-400">TRACKER</span></span>
-          <span class="block text-[10px] text-slate-400 font-medium tracking-tight">KOREA VISA SYSTEM</span>
-        </div>
-      </div>
+  <header class="sticky top-0 z-40 border-b border-slate-700/50 bg-slate-950/80 backdrop-blur-xl">
+    <div class="mx-auto flex min-h-[76px] max-w-7xl items-center justify-between gap-3 px-4 sm:px-6">
 
-      <div class="flex items-center space-x-3">
-        <button id="adminNavBtn" onclick="openAdminWithCheck()" class="hidden items-center space-x-2 bg-blue-600/20 text-blue-400 border border-blue-500/30 px-3 py-1.5 rounded-lg text-sm font-medium hover:bg-blue-600/30 transition">
-          <i data-lucide="shield" class="w-4 h-4"></i>
-          <span>Админ Панель</span>
+      <button onclick="switchTab('public')" class="flex items-center gap-3 text-left">
+        <span class="brand-gradient flex h-11 w-11 items-center justify-center rounded-2xl shadow-lg shadow-blue-500/20">
+          <i data-lucide="plane-takeoff" class="h-6 w-6 text-white"></i>
+        </span>
+        <span>
+          <span class="block text-lg font-extrabold tracking-wide text-white">
+            VISA<span class="text-cyan-400">TRACKER</span>
+          </span>
+          <span class="block text-[9px] font-semibold tracking-[.2em] text-slate-400">
+            KOREA VISA SYSTEM
+          </span>
+        </span>
+      </button>
+
+      <nav class="flex items-center gap-2">
+        <button id="adminNavBtn" onclick="openAdminWithCheck()"
+          class="hidden items-center gap-2 rounded-xl border border-blue-500/30 bg-blue-500/10 px-3 py-2 text-xs font-semibold text-blue-300 hover:bg-blue-500/20">
+          <i data-lucide="shield-check" class="h-4 w-4"></i>
+          <span class="desktop-nav-label">Админ</span>
         </button>
-        <button onclick="switchTab('public')" class="text-slate-300 hover:text-white px-3 py-2 rounded-lg text-sm font-medium transition flex items-center space-x-1">
-          <i data-lucide="search" class="w-4 h-4"></i>
-          <span>Явц Хайх</span>
+
+        <button onclick="switchTab('public')"
+          class="flex items-center gap-2 rounded-xl px-3 py-2 text-xs font-semibold text-slate-300 hover:bg-white/5 hover:text-white">
+          <i data-lucide="search" class="h-4 w-4"></i>
+          <span class="desktop-nav-label">Явц хайх</span>
         </button>
-        <button onclick="openModal('newAppModal')" class="bg-blue-600 hover:bg-blue-500 text-white px-4 py-2 rounded-xl text-sm font-medium shadow-lg shadow-blue-600/20 transition flex items-center space-x-1">
-          <i data-lucide="plus" class="w-4 h-4"></i>
-          <span>Хүсэлт Илгээх</span>
+
+        <button onclick="openModal('newAppModal')"
+          class="primary-btn flex items-center gap-2 rounded-xl px-3 sm:px-4 py-2.5 text-xs font-bold text-white">
+          <i data-lucide="plus" class="h-4 w-4"></i>
+          <span>Хүсэлт илгээх</span>
         </button>
-      </div>
+      </nav>
     </div>
   </header>
 
-  <!-- PUBLIC SECTION -->
-  <main id="publicSection" class="flex-grow max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-8">
-    <div class="text-center max-w-2xl mx-auto mb-10">
-      <h1 class="text-3xl font-extrabold text-white sm:text-4xl">БНСУ-ын Визний Явц Хянах</h1>
-      <p class="mt-2 text-slate-400 text-sm sm:text-base">Бүртгэлийн ID болон бүртгэлтэй утасны дугаараа оруулж мэдүүлгийнхээ явцыг шалгана уу.</p>
+  <!-- PUBLIC -->
+  <main id="publicSection" class="mx-auto w-full max-w-7xl flex-1 px-4 py-8 sm:px-6 sm:py-12">
 
-      <div class="mt-6 max-w-md mx-auto space-y-2">
-        <input type="text" id="searchInput" placeholder="Бүртгэлийн ID (VT-...)" class="w-full bg-slate-800 border border-slate-700 rounded-xl px-4 py-3 text-white placeholder-slate-500 focus:outline-none focus:border-blue-500 text-sm">
-        <input type="tel" id="searchPhoneInput" placeholder="Бүртгэлтэй утасны дугаар" class="w-full bg-slate-800 border border-slate-700 rounded-xl px-4 py-3 text-white placeholder-slate-500 focus:outline-none focus:border-blue-500 text-sm">
-        <button id="searchButton" onclick="searchApplication()" class="w-full bg-blue-600 hover:bg-blue-500 text-white font-medium px-6 py-3 rounded-xl text-sm transition">
-          Хайх
-        </button>
-      </div>
-    </div>
+    <!-- HERO -->
+    <section class="glass animate-up relative mx-auto max-w-5xl overflow-hidden rounded-[28px] px-5 py-12 text-center sm:px-12 sm:py-16">
 
-    <div id="searchResult" class="hidden max-w-3xl mx-auto space-y-6"></div>
+      <div class="pointer-events-none absolute -right-20 -top-24 h-72 w-72 rounded-full bg-blue-500/10 blur-3xl"></div>
+      <div class="pointer-events-none absolute -bottom-24 -left-20 h-72 w-72 rounded-full bg-cyan-500/10 blur-3xl"></div>
 
-    <div id="defaultState" class="max-w-4xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-6 pt-4">
-      <div class="bg-slate-800/50 border border-slate-700/60 p-5 rounded-2xl">
-        <div class="bg-blue-500/10 text-blue-400 p-3 rounded-xl w-fit mb-3">
-          <i data-lucide="file-check-2" class="w-6 h-6"></i>
+      <div class="relative z-10">
+        <span class="mb-5 inline-flex items-center gap-2 rounded-full border border-cyan-400/20 bg-cyan-400/10 px-4 py-2 text-[10px] font-bold tracking-[.15em] text-cyan-300">
+          <span class="h-2 w-2 rounded-full bg-emerald-400"></span>
+          KOREA VISA APPLICATION TRACKING
+        </span>
+
+        <h1 class="mx-auto max-w-3xl text-3xl font-extrabold leading-tight tracking-tight text-white sm:text-5xl">
+          БНСУ-ын визний
+          <span class="bg-gradient-to-r from-blue-400 to-cyan-300 bg-clip-text text-transparent">
+            явцаа хянах
+          </span>
+          систем
+        </h1>
+
+        <p class="mx-auto mt-5 max-w-xl text-sm leading-7 text-slate-400 sm:text-base">
+          Бүртгэлийн ID болон бүртгэлтэй утасны дугаараа ашиглан
+          визний хүсэлтийнхээ шинэчилсэн мэдээллийг шалгана уу.
+        </p>
+
+        <!-- SEARCH -->
+        <div class="mx-auto mt-9 max-w-md space-y-3 text-left">
+          <label class="block text-xs font-semibold text-slate-300">Бүртгэлийн дугаар</label>
+          <div class="relative">
+            <i data-lucide="ticket" class="absolute left-4 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-500"></i>
+            <input id="searchInput" type="text" placeholder="VT-2026-0001"
+              class="field pl-11 uppercase">
+          </div>
+
+          <label class="block text-xs font-semibold text-slate-300">Бүртгэлтэй утасны дугаар</label>
+          <div class="relative">
+            <i data-lucide="phone" class="absolute left-4 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-500"></i>
+            <input id="searchPhoneInput" type="tel" placeholder="99112233" class="field pl-11">
+          </div>
+
+          <button id="searchButton" onclick="searchApplication()"
+            class="primary-btn flex min-h-[50px] w-full items-center justify-center gap-2 rounded-xl text-sm font-bold text-white">
+            <i data-lucide="search" class="h-4 w-4"></i>
+            Хүсэлтийн явц шалгах
+          </button>
+
+          <p class="text-center text-[10px] leading-5 text-slate-500">
+            Таны мэдээлэл зөвхөн тохирох бүртгэлийг олоход ашиглагдана.
+          </p>
         </div>
-        <h3 class="font-semibold text-white">1. Хүсэлт ба Материал</h3>
-        <p class="text-xs text-slate-400 mt-1">Хүсэлт илгээсний дараа бүртгэлийн ID үүснэ.</p>
       </div>
-      <div class="bg-slate-800/50 border border-slate-700/60 p-5 rounded-2xl">
-        <div class="bg-purple-500/10 text-purple-400 p-3 rounded-xl w-fit mb-3">
-          <i data-lucide="refresh-cw" class="w-6 h-6"></i>
+    </section>
+
+    <!-- SEARCH RESULT -->
+    <div id="searchResult" class="mx-auto mt-8 hidden max-w-4xl space-y-5"></div>
+
+    <!-- FEATURES -->
+    <section id="defaultState" class="mx-auto mt-10 grid max-w-5xl grid-cols-1 gap-4 md:grid-cols-3">
+
+      <article class="feature-card rounded-2xl p-6">
+        <div class="mb-5 flex h-12 w-12 items-center justify-center rounded-2xl bg-blue-500/10 text-blue-400">
+          <i data-lucide="file-check-2" class="h-6 w-6"></i>
         </div>
-        <h3 class="font-semibold text-white">2. Шинэчлэлтийн Мэдэгдэл</h3>
-        <p class="text-xs text-slate-400 mt-1">Ажилтан хүсэлтийн төлөв болон тайлбарыг шинэчилнэ.</p>
-      </div>
-      <div class="bg-slate-800/50 border border-slate-700/60 p-5 rounded-2xl">
-        <div class="bg-emerald-500/10 text-emerald-400 p-3 rounded-xl w-fit mb-3">
-          <i data-lucide="check-circle-2" class="w-6 h-6"></i>
+        <span class="text-[10px] font-bold tracking-widest text-blue-400">01 / REGISTER</span>
+        <h3 class="mt-2 font-bold text-white">Хүсэлт бүртгүүлэх</h3>
+        <p class="mt-2 text-xs leading-6 text-slate-400">
+          Хүсэлтээ илгээж, өөрийн бүртгэлийн дугаарыг авна.
+        </p>
+      </article>
+
+      <article class="feature-card rounded-2xl p-6">
+        <div class="mb-5 flex h-12 w-12 items-center justify-center rounded-2xl bg-purple-500/10 text-purple-400">
+          <i data-lucide="refresh-cw" class="h-6 w-6"></i>
         </div>
-        <h3 class="font-semibold text-white">3. Эцсийн Шийдвэр</h3>
-        <p class="text-xs text-slate-400 mt-1">Визний хүсэлтийн шинэчилсэн мэдээллийг харна.</p>
+        <span class="text-[10px] font-bold tracking-widest text-purple-400">02 / TRACK</span>
+        <h3 class="mt-2 font-bold text-white">Явцаа хянах</h3>
+        <p class="mt-2 text-xs leading-6 text-slate-400">
+          Хүсэлтийн төлөв болон ажилтны шинэчилсэн тайлбарыг харна.
+        </p>
+      </article>
+
+      <article class="feature-card rounded-2xl p-6">
+        <div class="mb-5 flex h-12 w-12 items-center justify-center rounded-2xl bg-emerald-500/10 text-emerald-400">
+          <i data-lucide="check-circle-2" class="h-6 w-6"></i>
+        </div>
+        <span class="text-[10px] font-bold tracking-widest text-emerald-400">03 / RESULT</span>
+        <h3 class="mt-2 font-bold text-white">Үр дүн харах</h3>
+        <p class="mt-2 text-xs leading-6 text-slate-400">
+          Хүсэлтийн эцсийн шинэчлэгдсэн мэдээлэлтэй танилцана.
+        </p>
+      </article>
+    </section>
+
+    <!-- INFO -->
+    <section class="mx-auto mt-10 max-w-5xl rounded-2xl border border-blue-400/10 bg-blue-500/[.06] p-5 sm:p-6">
+      <div class="flex gap-4">
+        <div class="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-blue-500/10 text-blue-300">
+          <i data-lucide="info" class="h-5 w-5"></i>
+        </div>
+        <div>
+          <h3 class="text-sm font-bold text-white">Мэдээлэл</h3>
+          <p class="mt-1 text-xs leading-6 text-slate-400">
+            Хүсэлтийн явцын мэдээлэл шинэчлэгдэхэд админ системд бүртгэгдэнэ.
+            ID болон утасны дугаараа бусдад дамжуулахгүй байхыг зөвлөж байна.
+          </p>
+        </div>
       </div>
-    </div>
+    </section>
   </main>
 
-  <!-- ADMIN LOGIN MODAL -->
-  <div id="adminLoginModal" class="fixed inset-0 bg-slate-950/80 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
-    <div class="bg-slate-800 border border-slate-700 rounded-2xl max-w-sm w-full p-6 relative shadow-2xl">
-      <button onclick="closeModal('adminLoginModal')" class="absolute right-4 top-4 text-slate-400 hover:text-white">
-        <i data-lucide="x" class="w-5 h-5"></i>
+  <!-- ADMIN LOGIN -->
+  <div id="adminLoginModal" class="modal-backdrop fixed inset-0 z-50 hidden items-center justify-center p-4">
+    <div class="modal-card relative w-full max-w-sm p-7">
+      <button onclick="closeModal('adminLoginModal')"
+        class="absolute right-4 top-4 rounded-lg p-2 text-slate-400 hover:bg-white/5 hover:text-white">
+        <i data-lucide="x" class="h-5 w-5"></i>
       </button>
-      <div class="text-center mb-6">
-        <div class="bg-blue-600/10 text-blue-400 p-3 rounded-full w-fit mx-auto mb-3">
-          <i data-lucide="lock" class="w-6 h-6"></i>
-        </div>
-        <h3 class="text-lg font-bold text-white">Админ Нэвтрэх</h3>
-        <p class="text-xs text-slate-400 mt-1">Админы нууц үгээ оруулна уу</p>
+
+      <div class="mx-auto mb-5 flex h-14 w-14 items-center justify-center rounded-2xl bg-blue-500/10 text-blue-400">
+        <i data-lucide="shield-check" class="h-7 w-7"></i>
       </div>
-      <div class="space-y-4">
-        <input type="password" id="adminPinInput" placeholder="Админ нууц үг" autocomplete="current-password" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-4 py-3 text-center text-white text-lg tracking-widest focus:outline-none focus:border-blue-500">
-        <div id="loginError" class="text-red-400 text-xs text-center hidden"></div>
-        <button id="adminLoginButton" onclick="submitAdminLogin()" class="w-full bg-blue-600 hover:bg-blue-500 text-white font-medium py-3 rounded-xl text-sm transition">
+
+      <h3 class="text-center text-xl font-extrabold text-white">Админ нэвтрэх</h3>
+      <p class="mt-2 text-center text-xs text-slate-400">Админы нууц үгээ оруулна уу.</p>
+
+      <div class="mt-6 space-y-4">
+        <input id="adminPinInput" type="password" autocomplete="current-password"
+          placeholder="Нууц үг" class="field text-center tracking-widest">
+
+        <div id="loginError" class="hidden text-center text-xs text-red-400"></div>
+
+        <button id="adminLoginButton" onclick="submitAdminLogin()"
+          class="primary-btn w-full rounded-xl py-3 text-sm font-bold text-white">
           Нэвтрэх
         </button>
       </div>
@@ -110,72 +354,121 @@
   </div>
 
   <!-- ADMIN DASHBOARD -->
-  <main id="adminSection" class="hidden flex-grow max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-8">
-    <div class="flex items-center justify-between mb-8 pb-4 border-b border-slate-800">
+  <main id="adminSection" class="mx-auto hidden w-full max-w-7xl flex-1 px-4 py-8 sm:px-6">
+
+    <div class="mb-7 flex flex-col justify-between gap-4 border-b border-slate-700/50 pb-6 sm:flex-row sm:items-center">
       <div>
-        <h1 class="text-2xl font-bold text-white flex items-center gap-2">
-          Админ Удирдлагын Систем
-          <span class="bg-blue-500/10 text-blue-400 text-xs border border-blue-500/20 font-medium px-2.5 py-0.5 rounded-full">Authorized</span>
-        </h1>
-        <p class="text-xs text-slate-400 mt-1">Ирсэн хүсэлтүүдийг хянах, төлөв шинэчлэх, хариу илгээх</p>
+        <div class="flex flex-wrap items-center gap-3">
+          <h1 class="text-2xl font-extrabold text-white">Админ удирдлага</h1>
+          <span class="rounded-full border border-emerald-500/20 bg-emerald-500/10 px-3 py-1 text-[10px] font-bold text-emerald-400">
+            AUTHORIZED
+          </span>
+        </div>
+        <p class="mt-2 text-xs text-slate-400">Визний хүсэлтүүдийг хянах болон төлөв шинэчлэх</p>
       </div>
-      <div class="flex items-center space-x-3">
-        <button onclick="renderAdminTable()" class="bg-slate-800 hover:bg-slate-700 border border-slate-700 text-slate-300 px-3 py-1.5 rounded-xl text-xs font-medium transition flex items-center gap-1">
-          <i data-lucide="refresh-cw" class="w-4 h-4"></i>
+
+      <div class="flex gap-2">
+        <button onclick="renderAdminTable()"
+          class="flex items-center gap-2 rounded-xl border border-slate-600/50 bg-slate-800 px-4 py-2.5 text-xs font-semibold text-slate-300 hover:bg-slate-700">
+          <i data-lucide="refresh-cw" class="h-4 w-4"></i>
           Шинэчлэх
         </button>
-        <button onclick="adminLogout()" class="bg-slate-800 hover:bg-slate-700 border border-slate-700 text-slate-300 px-3 py-1.5 rounded-xl text-xs font-medium transition flex items-center space-x-1">
-          <i data-lucide="log-out" class="w-4 h-4"></i>
-          <span>Гарах</span>
+
+        <button onclick="adminLogout()"
+          class="flex items-center gap-2 rounded-xl border border-red-500/20 bg-red-500/10 px-4 py-2.5 text-xs font-semibold text-red-300 hover:bg-red-500/20">
+          <i data-lucide="log-out" class="h-4 w-4"></i>
+          Гарах
         </button>
       </div>
     </div>
 
-    <div class="bg-slate-800 border border-slate-700 rounded-2xl overflow-hidden shadow-xl">
-      <div class="p-4 border-b border-slate-700 flex justify-between items-center bg-slate-800/50">
-        <h2 class="font-semibold text-white text-sm">Хүсэлтүүдийн жагсаалт</h2>
-        <span id="appCountBadge" class="text-xs text-slate-400 bg-slate-700 px-2.5 py-1 rounded-full">0 хүсэлт</span>
+    <!-- SUMMARY -->
+    <section class="mb-6 grid grid-cols-1 gap-4 sm:grid-cols-3">
+      <div class="glass rounded-2xl p-5">
+        <div class="flex items-center justify-between">
+          <span class="text-xs text-slate-400">Нийт хүсэлт</span>
+          <i data-lucide="files" class="h-5 w-5 text-blue-400"></i>
+        </div>
+        <p id="adminTotalCount" class="mt-3 text-3xl font-extrabold text-white">0</p>
       </div>
+
+      <div class="glass rounded-2xl p-5">
+        <div class="flex items-center justify-between">
+          <span class="text-xs text-slate-400">Шалгаж байгаа</span>
+          <i data-lucide="clock" class="h-5 w-5 text-amber-400"></i>
+        </div>
+        <p id="adminPendingCount" class="mt-3 text-3xl font-extrabold text-white">0</p>
+      </div>
+
+      <div class="glass rounded-2xl p-5">
+        <div class="flex items-center justify-between">
+          <span class="text-xs text-slate-400">Дууссан үйлчилгээ</span>
+          <i data-lucide="check-circle" class="h-5 w-5 text-emerald-400"></i>
+        </div>
+        <p id="adminCompletedCount" class="mt-3 text-3xl font-extrabold text-white">0</p>
+      </div>
+    </section>
+
+    <!-- TABLE -->
+    <section class="glass overflow-hidden rounded-2xl">
+      <div class="flex items-center justify-between gap-3 border-b border-slate-700/50 p-5">
+        <div>
+          <h2 class="font-bold text-white">Хүсэлтүүдийн жагсаалт</h2>
+          <p class="mt-1 text-[11px] text-slate-400">Бүртгэгдсэн хүсэлтүүд</p>
+        </div>
+        <span id="appCountBadge" class="rounded-full bg-blue-500/10 px-3 py-1.5 text-xs font-bold text-blue-300">0 хүсэлт</span>
+      </div>
+
       <div class="overflow-x-auto">
-        <table class="w-full text-left border-collapse text-sm">
-          <thead>
-            <tr class="border-b border-slate-700 text-slate-400 text-xs bg-slate-900/40">
-              <th class="p-4 font-medium">ID</th>
-              <th class="p-4 font-medium">Овог Нэр</th>
-              <th class="p-4 font-medium">Утас</th>
-              <th class="p-4 font-medium">Визний төрөл</th>
-              <th class="p-4 font-medium">Одоогийн Төлөв</th>
-              <th class="p-4 font-medium">Үйлдлүүд</th>
+        <table class="admin-table w-full border-collapse text-left text-sm">
+          <thead class="bg-slate-950/40">
+            <tr class="border-b border-slate-700/50">
+              <th class="p-4">ID</th>
+              <th class="p-4">Овог нэр</th>
+              <th class="p-4">Утас</th>
+              <th class="p-4">Визний төрөл</th>
+              <th class="p-4">Төлөв</th>
+              <th class="p-4">Үйлдэл</th>
             </tr>
           </thead>
-          <tbody id="adminTableBody" class="divide-y divide-slate-700/60 text-slate-300"></tbody>
+          <tbody id="adminTableBody" class="divide-y divide-slate-700/40 text-slate-300"></tbody>
         </table>
       </div>
-    </div>
+    </section>
   </main>
 
   <!-- NEW APPLICATION MODAL -->
-  <div id="newAppModal" class="fixed inset-0 bg-slate-950/80 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
-    <div class="bg-slate-800 border border-slate-700 rounded-2xl max-w-md w-full p-6 relative shadow-2xl">
-      <button onclick="closeModal('newAppModal')" class="absolute right-4 top-4 text-slate-400 hover:text-white">
-        <i data-lucide="x" class="w-5 h-5"></i>
+  <div id="newAppModal" class="modal-backdrop fixed inset-0 z-50 hidden items-center justify-center p-4">
+    <div class="modal-card relative w-full max-w-md p-6 sm:p-7">
+      <button onclick="closeModal('newAppModal')"
+        class="absolute right-4 top-4 rounded-lg p-2 text-slate-400 hover:bg-white/5 hover:text-white">
+        <i data-lucide="x" class="h-5 w-5"></i>
       </button>
-      <h3 class="text-lg font-bold text-white mb-4 flex items-center gap-2">
-        <i data-lucide="file-plus" class="w-5 h-5 text-blue-400"></i>
-        Шинэ Визний Хүсэлт Илгээх
-      </h3>
+
+      <div class="mb-6">
+        <span class="mb-3 inline-flex h-11 w-11 items-center justify-center rounded-xl bg-blue-500/10 text-blue-400">
+          <i data-lucide="file-plus-2" class="h-5 w-5"></i>
+        </span>
+        <h3 class="text-xl font-extrabold text-white">Шинэ визний хүсэлт</h3>
+        <p class="mt-1 text-xs text-slate-400">Мэдээллээ үнэн зөв бөглөнө үү.</p>
+      </div>
+
       <form id="newAppForm" onsubmit="handleNewApplication(event)" class="space-y-4">
         <div>
-          <label class="block text-xs font-medium text-slate-400 mb-1">Овог Нэр *</label>
-          <input type="text" id="appFullName" required maxlength="120" placeholder="Баатарын Болд" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3.5 py-2.5 text-white text-sm focus:outline-none focus:border-blue-500">
+          <label class="mb-2 block text-xs font-semibold text-slate-300">Овог нэр *</label>
+          <input type="text" id="appFullName" required maxlength="120"
+            autocomplete="name" placeholder="Овог нэр" class="field">
         </div>
+
         <div>
-          <label class="block text-xs font-medium text-slate-400 mb-1">Холбоо барих утас *</label>
-          <input type="tel" id="appPhone" required maxlength="30" placeholder="99112233" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3.5 py-2.5 text-white text-sm focus:outline-none focus:border-blue-500">
+          <label class="mb-2 block text-xs font-semibold text-slate-300">Холбоо барих утас *</label>
+          <input type="tel" id="appPhone" required maxlength="30"
+            autocomplete="tel" placeholder="99112233" class="field">
         </div>
+
         <div>
-          <label class="block text-xs font-medium text-slate-400 mb-1">Визний ангилал *</label>
-          <select id="appVisaType" required class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3.5 py-2.5 text-white text-sm focus:outline-none focus:border-blue-500">
+          <label class="mb-2 block text-xs font-semibold text-slate-300">Визний ангилал *</label>
+          <select id="appVisaType" required class="field">
             <option value="C-3-9 Залуучуудын аялал">C-3-9 (Богино хугацааны аялал)</option>
             <option value="D-2 Суралцах виз">D-2 (Их дээд сургууль)</option>
             <option value="D-4 Хэлний бэлтгэл">D-4 (Хэлний сургалт)</option>
@@ -183,59 +476,83 @@
             <option value="F-1 Гэр бүлийн виз">F-1 (Айлчлал / Хамаатан)</option>
           </select>
         </div>
-        <div id="newAppError" class="hidden text-red-400 text-xs"></div>
-        <div class="pt-2 flex justify-end gap-2">
-          <button type="button" onclick="closeModal('newAppModal')" class="px-4 py-2 bg-slate-700 hover:bg-slate-600 text-white rounded-xl text-xs font-medium transition">Цуцлах</button>
-          <button id="newAppSubmitButton" type="submit" class="px-5 py-2 bg-blue-600 hover:bg-blue-500 text-white rounded-xl text-xs font-medium transition shadow-lg shadow-blue-600/20">Илгээх</button>
+
+        <div id="newAppError" class="hidden rounded-xl border border-red-500/20 bg-red-500/10 p-3 text-xs text-red-300"></div>
+
+        <div class="flex gap-2 pt-2">
+          <button type="button" onclick="closeModal('newAppModal')"
+            class="flex-1 rounded-xl bg-slate-700 py-3 text-xs font-bold text-white hover:bg-slate-600">
+            Цуцлах
+          </button>
+          <button id="newAppSubmitButton" type="submit"
+            class="primary-btn flex-1 rounded-xl py-3 text-xs font-bold text-white">
+            Хүсэлт илгээх
+          </button>
         </div>
       </form>
     </div>
   </div>
 
   <!-- EDIT STATUS MODAL -->
-  <div id="editStatusModal" class="fixed inset-0 bg-slate-950/80 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
-    <div class="bg-slate-800 border border-slate-700 rounded-2xl max-w-lg w-full p-6 relative shadow-2xl">
-      <button onclick="closeModal('editStatusModal')" class="absolute right-4 top-4 text-slate-400 hover:text-white">
-        <i data-lucide="x" class="w-5 h-5"></i>
+  <div id="editStatusModal" class="modal-backdrop fixed inset-0 z-50 hidden items-center justify-center p-4">
+    <div class="modal-card relative w-full max-w-lg p-6 sm:p-7">
+      <button onclick="closeModal('editStatusModal')"
+        class="absolute right-4 top-4 rounded-lg p-2 text-slate-400 hover:bg-white/5 hover:text-white">
+        <i data-lucide="x" class="h-5 w-5"></i>
       </button>
-      <h3 class="text-lg font-bold text-white mb-1">Хүсэлтэд Хариулах & Төлөв шинэчлэх</h3>
-      <p id="editTargetName" class="text-xs text-blue-400 mb-4"></p>
-      <form onsubmit="handleStatusUpdate(event)" class="space-y-4">
+
+      <h3 class="text-xl font-extrabold text-white">Хүсэлт шинэчлэх</h3>
+      <p class="mt-2 text-xs text-slate-400">Хүсэлтийн төлөв болон тайлбарыг шинэчилнэ.</p>
+      <p id="editTargetName" class="mt-4 text-sm font-semibold text-cyan-300"></p>
+
+      <form onsubmit="handleStatusUpdate(event)" class="mt-5 space-y-4">
         <input type="hidden" id="editAppId">
+
         <div>
-          <label class="block text-xs font-medium text-slate-400 mb-1">Шинэ Төлөв сонгох</label>
-          <select id="editStatusSelect" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3.5 py-2.5 text-white text-sm focus:outline-none focus:border-blue-500">
-            <option value="Registered">Registered (Хүсэлт бүртгэгдсэн)</option>
-            <option value="Documents Pending">Documents Pending (Материал хүлээгдэж байна)</option>
-            <option value="Documents Reviewing">Documents Reviewing (Материал шалгаж байна)</option>
-            <option value="Correction Required">Correction Required (Материал засварлах шаардлагатай)</option>
-            <option value="Ready for Submission">Ready for Submission (Мэдүүлэгт бэлэн)</option>
-            <option value="Submitted">Submitted (Элчин/KVAC-д хүргүүлсэн)</option>
-            <option value="Decision Pending">Decision Pending (Шийдвэр хүлээгдэж байна)</option>
-            <option value="Decision Received">Decision Received (Шийдвэрийн хариу гарсан)</option>
-            <option value="Completed">Completed (Үйлчилгээ дууссан)</option>
+          <label class="mb-2 block text-xs font-semibold text-slate-300">Шинэ төлөв</label>
+          <select id="editStatusSelect" class="field">
+            <option value="Registered">Registered — Хүсэлт бүртгэгдсэн</option>
+            <option value="Documents Pending">Documents Pending — Материал хүлээгдэж байна</option>
+            <option value="Documents Reviewing">Documents Reviewing — Материал шалгаж байна</option>
+            <option value="Correction Required">Correction Required — Материал засварлах шаардлагатай</option>
+            <option value="Ready for Submission">Ready for Submission — Мэдүүлэгт бэлэн</option>
+            <option value="Submitted">Submitted — Элчин/KVAC-д хүргүүлсэн</option>
+            <option value="Decision Pending">Decision Pending — Шийдвэр хүлээгдэж байна</option>
+            <option value="Decision Received">Decision Received — Шийдвэрийн хариу гарсан</option>
+            <option value="Completed">Completed — Үйлчилгээ дууссан</option>
           </select>
         </div>
+
         <div>
-          <label class="block text-xs font-medium text-slate-400 mb-1">Хэрэглэгчид харагдах Хариу / Тайлбар</label>
-          <textarea id="editResponseNote" rows="3" maxlength="2000" placeholder="Бичиг баримтын шалгалт дууслаа..." class="w-full bg-slate-900 border border-slate-700 rounded-xl p-3 text-white text-sm focus:outline-none focus:border-blue-500"></textarea>
+          <label class="mb-2 block text-xs font-semibold text-slate-300">Хэрэглэгчид харагдах тайлбар</label>
+          <textarea id="editResponseNote" rows="4" maxlength="2000"
+            placeholder="Хэрэглэгчид харагдах мэдээллээ бичнэ үү..." class="field resize-y"></textarea>
         </div>
-        <div id="editStatusError" class="hidden text-red-400 text-xs"></div>
-        <div class="pt-2 flex justify-end gap-2">
-          <button type="button" onclick="closeModal('editStatusModal')" class="px-4 py-2 bg-slate-700 hover:bg-slate-600 text-white rounded-xl text-xs font-medium transition">Цуцлах</button>
-          <button id="editStatusButton" type="submit" class="px-5 py-2 bg-blue-600 hover:bg-blue-500 text-white rounded-xl text-xs font-medium transition">Шинэчлэх & Хэрэглэгчид Илгээх</button>
+
+        <div id="editStatusError" class="hidden rounded-xl border border-red-500/20 bg-red-500/10 p-3 text-xs text-red-300"></div>
+
+        <div class="flex gap-2 pt-2">
+          <button type="button" onclick="closeModal('editStatusModal')"
+            class="flex-1 rounded-xl bg-slate-700 py-3 text-xs font-bold text-white hover:bg-slate-600">
+            Цуцлах
+          </button>
+          <button id="editStatusButton" type="submit"
+            class="primary-btn flex-1 rounded-xl py-3 text-xs font-bold text-white">
+            Хадгалах
+          </button>
         </div>
       </form>
     </div>
   </div>
 
   <!-- FOOTER -->
-  <footer class="bg-slate-950 border-t border-slate-800 py-6 text-center text-xs text-slate-500">
-    <div class="max-w-7xl mx-auto px-4 flex flex-col sm:flex-row items-center justify-between gap-2">
-      <span id="secretFooterTrigger" onclick="handleSecretClick()" class="cursor-pointer select-none hover:text-slate-400 transition">
-        Visa Tracker Platform © 2026. All rights reserved.
+  <footer class="mt-12 border-t border-slate-700/40 bg-slate-950/70 py-7">
+    <div class="mx-auto flex max-w-7xl flex-col items-center justify-between gap-3 px-4 text-center sm:flex-row sm:px-6">
+      <span id="secretFooterTrigger" onclick="handleSecretClick()"
+        class="cursor-pointer select-none text-xs font-semibold text-slate-500 hover:text-slate-300">
+        VISA TRACKER © 2026. All rights reserved.
       </span>
-      <span class="text-slate-600">Built for Korea Visa Applicants & Agencies</span>
+      <span class="text-[10px] text-slate-600">KOREA VISA APPLICATION TRACKING PLATFORM</span>
     </div>
   </footer>
 
@@ -246,6 +563,7 @@
   let adminPassword = "";
   let adminApplications = [];
   let secretClickCount = 0;
+  let searchRequestController = null;
 
   const allowedStatuses = [
     "Registered",
@@ -257,6 +575,26 @@
     "Decision Pending",
     "Decision Received",
     "Completed"
+  ];
+
+  const statusLabels = {
+    "Registered": "Хүсэлт бүртгэгдсэн",
+    "Documents Pending": "Материал хүлээгдэж байна",
+    "Documents Reviewing": "Материал шалгаж байна",
+    "Correction Required": "Материал засварлах шаардлагатай",
+    "Ready for Submission": "Мэдүүлэгт бэлэн",
+    "Submitted": "Элчин / KVAC-д хүргүүлсэн",
+    "Decision Pending": "Шийдвэр хүлээгдэж байна",
+    "Decision Received": "Шийдвэрийн хариу гарсан",
+    "Completed": "Үйлчилгээ дууссан"
+  };
+
+  const progressSteps = [
+    "Registered",
+    "Documents Reviewing",
+    "Ready for Submission",
+    "Submitted",
+    "Decision Received"
   ];
 
   function escapeHTML(value) {
@@ -272,9 +610,7 @@
   async function apiRequest(url, options = {}) {
     const response = await fetch(url, {
       ...options,
-      headers: {
-        ...(options.headers || {})
-      }
+      headers: { ...(options.headers || {}) }
     });
 
     let data = {};
@@ -291,26 +627,42 @@
     return data;
   }
 
-  function setButtonLoading(buttonId, loading, loadingText, normalText) {
-    const button = document.getElementById(buttonId);
+  function setButtonLoading(id, loading, loadingText, normalText) {
+    const button = document.getElementById(id);
     if (!button) return;
     button.disabled = loading;
     button.textContent = loading ? loadingText : normalText;
-    button.classList.toggle("opacity-60", loading);
-    button.classList.toggle("cursor-not-allowed", loading);
   }
 
-  function showMessage(elementId, message) {
-    const element = document.getElementById(elementId);
-    element.textContent = message;
-    element.classList.remove("hidden");
+  function showMessage(id, message) {
+    const el = document.getElementById(id);
+    el.textContent = message;
+    el.classList.remove("hidden");
   }
 
-  function hideMessage(elementId) {
-    document.getElementById(elementId).classList.add("hidden");
+  function hideMessage(id) {
+    document.getElementById(id).classList.add("hidden");
   }
 
-  // ADMIN LOGIN
+  function refreshIcons() {
+    if (window.lucide) lucide.createIcons();
+  }
+
+  // MODALS
+  function openModal(id) {
+    const modal = document.getElementById(id);
+    modal.classList.remove("hidden");
+    modal.classList.add("flex");
+    refreshIcons();
+  }
+
+  function closeModal(id) {
+    const modal = document.getElementById(id);
+    modal.classList.add("hidden");
+    modal.classList.remove("flex");
+  }
+
+  // ADMIN ENTRY
   function handleSecretClick() {
     secretClickCount++;
     if (secretClickCount >= 5) {
@@ -321,9 +673,13 @@
 
   document.addEventListener("keydown", event => {
     if ((event.ctrlKey || event.metaKey) && event.shiftKey &&
-        (event.key === "A" || event.key === "a")) {
+        event.key.toLowerCase() === "a") {
       event.preventDefault();
       openAdminWithCheck();
+    }
+
+    if (event.key === "Escape") {
+      ["newAppModal", "adminLoginModal", "editStatusModal"].forEach(closeModal);
     }
   });
 
@@ -332,12 +688,13 @@
       switchTab("admin");
     } else {
       openModal("adminLoginModal");
-      document.getElementById("adminPinInput").focus();
+      setTimeout(() => document.getElementById("adminPinInput").focus(), 100);
     }
   }
 
   async function submitAdminLogin() {
     const password = document.getElementById("adminPinInput").value;
+
     if (!password) {
       showMessage("loginError", "Нууц үгээ оруулна уу.");
       return;
@@ -358,8 +715,11 @@
 
       document.getElementById("adminPinInput").value = "";
       closeModal("adminLoginModal");
-      document.getElementById("adminNavBtn").classList.remove("hidden");
-      document.getElementById("adminNavBtn").classList.add("flex");
+
+      const nav = document.getElementById("adminNavBtn");
+      nav.classList.remove("hidden");
+      nav.classList.add("flex");
+
       switchTab("admin");
     } catch (error) {
       showMessage("loginError", error.message || "Нэвтрэхэд алдаа гарлаа.");
@@ -372,114 +732,164 @@
     isAdminLoggedIn = false;
     adminPassword = "";
     adminApplications = [];
-    document.getElementById("adminNavBtn").classList.add("hidden");
-    document.getElementById("adminNavBtn").classList.remove("flex");
+
+    const nav = document.getElementById("adminNavBtn");
+    nav.classList.add("hidden");
+    nav.classList.remove("flex");
+
     switchTab("public");
   }
 
-  // TAB AND MODALS
   function switchTab(tab) {
     if (tab === "admin") {
       if (!isAdminLoggedIn) return openModal("adminLoginModal");
+
       document.getElementById("publicSection").classList.add("hidden");
       document.getElementById("adminSection").classList.remove("hidden");
+
       renderAdminTable();
     } else {
       document.getElementById("adminSection").classList.add("hidden");
       document.getElementById("publicSection").classList.remove("hidden");
     }
-  }
 
-  function openModal(id) {
-    document.getElementById(id).classList.remove("hidden");
-  }
-
-  function closeModal(id) {
-    document.getElementById(id).classList.add("hidden");
+    window.scrollTo({ top: 0, behavior: "smooth" });
   }
 
   // PUBLIC SEARCH
   async function searchApplication() {
     const id = document.getElementById("searchInput").value.trim().toUpperCase();
     const phone = document.getElementById("searchPhoneInput").value.trim();
-    const resultContainer = document.getElementById("searchResult");
-    const defaultState = document.getElementById("defaultState");
+    const result = document.getElementById("searchResult");
+    const defaults = document.getElementById("defaultState");
+    const button = document.getElementById("searchButton");
 
     if (!id || !phone) {
-      resultContainer.classList.remove("hidden");
-      defaultState.classList.add("hidden");
-      resultContainer.innerHTML = `
-        <div class="bg-slate-800 border border-amber-500/30 p-6 rounded-2xl text-center">
-          <p class="text-amber-400 text-sm">Бүртгэлийн ID болон утасны дугаараа хоёуланг нь оруулна уу.</p>
+      result.classList.remove("hidden");
+      defaults.classList.add("hidden");
+      result.innerHTML = `
+        <div class="glass rounded-2xl p-6 text-center">
+          <i data-lucide="alert-circle" class="mx-auto mb-3 h-9 w-9 text-amber-400"></i>
+          <p class="text-sm font-semibold text-amber-300">ID болон утасны дугаараа хоёуланг нь оруулна уу.</p>
         </div>`;
+      refreshIcons();
       return;
     }
 
-    const button = document.getElementById("searchButton");
+    if (searchRequestController) searchRequestController.abort();
+    searchRequestController = new AbortController();
+
     button.disabled = true;
-    button.textContent = "Хайж байна...";
-    resultContainer.classList.remove("hidden");
-    defaultState.classList.add("hidden");
-    resultContainer.innerHTML = `<p class="text-center text-slate-400 text-sm">Мэдээлэл шалгаж байна...</p>`;
+    button.textContent = "Шалгаж байна...";
+
+    result.classList.remove("hidden");
+    defaults.classList.add("hidden");
+    result.innerHTML = `<div class="glass rounded-2xl p-8 text-center text-sm text-slate-400">Мэдээлэл шалгаж байна...</div>`;
 
     try {
       const params = new URLSearchParams({ id, phone });
-      const data = await apiRequest(`${API_URL}?${params.toString()}`);
-      const application = data.application;
+      const data = await apiRequest(`${API_URL}?${params.toString()}`, {
+        signal: searchRequestController.signal
+      });
 
-      if (!application) {
-        resultContainer.innerHTML = `
-          <div class="bg-slate-800/40 border border-slate-700 p-8 rounded-2xl text-center">
-            <i data-lucide="alert-circle" class="w-10 h-10 text-slate-500 mx-auto mb-2"></i>
-            <h3 class="text-base font-semibold text-white">Хүсэлт олдсонгүй</h3>
-            <p class="text-xs text-slate-400 mt-1">ID болон утасны дугаараа дахин шалгана уу.</p>
+      if (!data.application) {
+        result.innerHTML = `
+          <div class="glass rounded-2xl p-8 text-center">
+            <i data-lucide="search-x" class="mx-auto mb-3 h-10 w-10 text-slate-500"></i>
+            <h3 class="font-bold text-white">Хүсэлт олдсонгүй</h3>
+            <p class="mt-2 text-xs text-slate-400">ID болон утасны дугаараа дахин шалгана уу.</p>
           </div>`;
-        lucide.createIcons();
+        refreshIcons();
         return;
       }
 
-      renderSearchResult(application);
+      renderSearchResult(data.application);
     } catch (error) {
-      resultContainer.innerHTML = `
-        <div class="bg-slate-800 border border-red-500/30 p-6 rounded-2xl text-center">
-          <p class="text-red-400 text-sm">${escapeHTML(error.message)}</p>
+      if (error.name === "AbortError") return;
+
+      result.innerHTML = `
+        <div class="glass rounded-2xl border border-red-500/20 p-6 text-center">
+          <p class="text-sm text-red-300">${escapeHTML(error.message)}</p>
         </div>`;
     } finally {
       button.disabled = false;
-      button.textContent = "Хайх";
+      button.innerHTML = '<i data-lucide="search" class="h-4 w-4"></i> Хүсэлтийн явц шалгах';
+      refreshIcons();
     }
   }
 
   function renderSearchResult(application) {
     const container = document.getElementById("searchResult");
+    const status = allowedStatuses.includes(application.status) ? application.status : "Registered";
+
     container.classList.remove("hidden");
 
     container.innerHTML = `
-      <div class="bg-slate-800 border border-slate-700 rounded-2xl p-6 shadow-2xl relative overflow-hidden">
-        <div class="flex flex-col sm:flex-row justify-between sm:items-center gap-2 border-b border-slate-700/80 pb-4">
+      <section class="glass animate-up overflow-hidden rounded-3xl">
+        <div class="border-b border-slate-700/50 bg-gradient-to-r from-blue-500/10 to-cyan-500/5 p-6 sm:p-8">
+          <div class="flex flex-col justify-between gap-4 sm:flex-row sm:items-center">
+            <div>
+              <span class="text-[10px] font-bold tracking-[.18em] text-cyan-400">APPLICATION DETAILS</span>
+              <h2 class="mt-2 text-2xl font-extrabold text-white">${escapeHTML(application.fullName)}</h2>
+              <p class="mt-2 font-mono text-xs text-blue-300">${escapeHTML(application.id)}</p>
+              <p class="mt-2 text-xs text-slate-400">${escapeHTML(application.visaType)}</p>
+            </div>
+            <div>${getStatusBadge(status, true)}</div>
+          </div>
+        </div>
+
+        <div class="grid gap-6 p-6 sm:p-8 md:grid-cols-2">
           <div>
-            <span class="text-xs text-blue-400 font-mono tracking-wider">${escapeHTML(application.id)}</span>
-            <h2 class="text-xl font-bold text-white">${escapeHTML(application.fullName)}</h2>
-            <p class="text-xs text-slate-400">${escapeHTML(application.visaType)}</p>
+            <div class="mb-4 flex items-center gap-2">
+              <i data-lucide="message-square-text" class="h-4 w-4 text-cyan-400"></i>
+              <h3 class="text-xs font-bold uppercase tracking-wider text-slate-300">Сүүлийн хариу / тайлбар</h3>
+            </div>
+            <div class="rounded-2xl border border-slate-700/50 bg-slate-950/40 p-5">
+              <p class="whitespace-pre-wrap text-sm leading-7 text-slate-200">${escapeHTML(application.note || "Одоогоор нэмэлт тайлбар бичигдээгүй байна.")}</p>
+              <p class="mt-4 border-t border-slate-700/50 pt-3 text-[10px] text-slate-500">
+                Шинэчилсэн: ${escapeHTML(application.updatedAt || "Мэдээлэлгүй")}
+              </p>
+            </div>
           </div>
-          <div class="self-start sm:self-auto">${getStatusBadge(application.status)}</div>
-        </div>
-        <div class="py-6">
-          <h4 class="text-xs font-semibold text-slate-400 uppercase tracking-wider mb-3">Сүүлийн Хариу / Ажилтны Тэмдэглэл</h4>
-          <div class="bg-slate-900/80 border border-slate-700/60 p-4 rounded-xl">
-            <p class="text-sm text-slate-200 whitespace-pre-wrap">${escapeHTML(application.note || "Одоогоор нэмэлт тайлбар бичигдээгүй байна.")}</p>
-            <span class="block text-[11px] text-slate-500 mt-2">Шинэчилсэн: ${escapeHTML(application.updatedAt || "")}</span>
+
+          <div>
+            <div class="mb-4 flex items-center gap-2">
+              <i data-lucide="route" class="h-4 w-4 text-cyan-400"></i>
+              <h3 class="text-xs font-bold uppercase tracking-wider text-slate-300">Визний процесс</h3>
+            </div>
+            <div class="rounded-2xl border border-slate-700/50 bg-slate-950/30 p-5">
+              ${renderStatusSteps(status)}
+            </div>
           </div>
         </div>
-        <div>
-          <h4 class="text-xs font-semibold text-slate-400 uppercase tracking-wider mb-4">Визний Процесс</h4>
-          <div class="space-y-2">${renderStatusSteps(application.status)}</div>
-        </div>
-      </div>`;
-    lucide.createIcons();
+      </section>`;
+
+    refreshIcons();
   }
 
-  // NEW APPLICATION SUBMISSION
+  function renderStatusSteps(currentStatus) {
+    const index = progressSteps.indexOf(currentStatus);
+    const currentIndex = index < 0 ? 0 : index;
+
+    return progressSteps.map((step, i) => {
+      const done = i <= currentIndex;
+      const current = i === currentIndex;
+
+      return `
+        <div class="step relative flex gap-4 pb-6 ${done ? "done" : ""}">
+          <div class="step-line"></div>
+          <div class="status-dot ${done ? "bg-blue-600 text-white" : "bg-slate-700 text-slate-400"} ${current ? "ring-4 ring-blue-500/15" : ""}">
+            ${done ? '<i data-lucide="check" class="h-4 w-4"></i>' : `<span class="text-xs font-bold">${i + 1}</span>`}
+          </div>
+          <div class="pt-1">
+            <p class="text-xs font-bold ${done ? "text-white" : "text-slate-500"}">${escapeHTML(statusLabels[step])}</p>
+            ${current ? '<span class="mt-1 inline-block text-[9px] font-bold text-cyan-400">ОДООГИЙН ҮЕ ШАТ</span>' : ""}
+          </div>
+        </div>`;
+    }).join("");
+  }
+
+  // NEW APPLICATION
   async function handleNewApplication(event) {
     event.preventDefault();
     hideMessage("newAppError");
@@ -488,7 +898,12 @@
     const phone = document.getElementById("appPhone").value.trim();
     const visaType = document.getElementById("appVisaType").value;
 
-    setButtonLoading("newAppSubmitButton", true, "Илгээж байна...", "Илгээх");
+    if (!fullName || !phone) {
+      showMessage("newAppError", "Шаардлагатай мэдээллээ бүрэн оруулна уу.");
+      return;
+    }
+
+    setButtonLoading("newAppSubmitButton", true, "Илгээж байна...", "Хүсэлт илгээх");
 
     try {
       const data = await apiRequest(API_URL, {
@@ -498,6 +913,7 @@
       });
 
       const application = data.application;
+
       if (!application || !application.id) {
         throw new Error("Хүсэлт хадгалагдсан эсэхийг баталгаажуулж чадсангүй.");
       }
@@ -510,20 +926,23 @@
 
       await searchApplication();
 
-      alert(`Таны хүсэлт амжилттай бүртгэгдлээ.\nБүртгэлийн ID: ${application.id}\nЭнэ ID-г хадгалж аваарай.`);
+      alert(
+        `Таны хүсэлт амжилттай бүртгэгдлээ.\n\nБүртгэлийн ID: ${application.id}\n\nЭнэ дугаарыг хадгалж аваарай.`
+      );
     } catch (error) {
       showMessage("newAppError", error.message || "Хүсэлт илгээхэд алдаа гарлаа.");
     } finally {
-      setButtonLoading("newAppSubmitButton", false, "Илгээж байна...", "Илгээх");
+      setButtonLoading("newAppSubmitButton", false, "Илгээж байна...", "Хүсэлт илгээх");
     }
   }
 
-  // ADMIN APPLICATION LIST
+  // ADMIN LIST
   async function renderAdminTable() {
     if (!isAdminLoggedIn || !adminPassword) return;
 
     const tbody = document.getElementById("adminTableBody");
-    tbody.innerHTML = `<tr><td colspan="6" class="p-6 text-center text-slate-400">Хүсэлтүүдийг ачаалж байна...</td></tr>`;
+    tbody.innerHTML = `
+      <tr><td colspan="6" class="p-8 text-center text-slate-400">Хүсэлтүүдийг ачаалж байна...</td></tr>`;
 
     try {
       const data = await apiRequest(`${API_URL}?admin=1`, {
@@ -532,24 +951,34 @@
       });
 
       adminApplications = data.applications || [];
-      document.getElementById("appCountBadge").innerText = `${adminApplications.length} хүсэлт`;
 
-      if (!adminApplications.length) {
-        tbody.innerHTML = `<tr><td colspan="6" class="p-6 text-center text-slate-400">Одоогоор хүсэлт бүртгэгдээгүй байна.</td></tr>`;
+      const total = adminApplications.length;
+      const completed = adminApplications.filter(x => x.status === "Completed").length;
+      const pending = adminApplications.filter(x => x.status !== "Completed" && x.status !== "Decision Received").length;
+
+      document.getElementById("adminTotalCount").textContent = total;
+      document.getElementById("adminPendingCount").textContent = pending;
+      document.getElementById("adminCompletedCount").textContent = completed;
+      document.getElementById("appCountBadge").textContent = `${total} хүсэлт`;
+
+      if (!total) {
+        tbody.innerHTML = `
+          <tr><td colspan="6" class="p-8 text-center text-slate-400">Одоогоор хүсэлт бүртгэгдээгүй байна.</td></tr>`;
         return;
       }
 
       tbody.innerHTML = adminApplications.map(item => `
-        <tr class="hover:bg-slate-700/30 transition">
-          <td class="p-4 font-mono text-xs text-blue-400 font-semibold">${escapeHTML(item.id)}</td>
-          <td class="p-4 font-medium text-white">${escapeHTML(item.fullName)}</td>
-          <td class="p-4 text-slate-400 text-xs">${escapeHTML(item.phone)}</td>
-          <td class="p-4 text-xs">${escapeHTML(item.visaType)}</td>
+        <tr class="transition">
+          <td class="p-4 font-mono text-xs font-bold text-cyan-300">${escapeHTML(item.id)}</td>
+          <td class="p-4 font-semibold text-white">${escapeHTML(item.fullName)}</td>
+          <td class="p-4 text-xs text-slate-400">${escapeHTML(item.phone)}</td>
+          <td class="p-4 text-xs text-slate-300">${escapeHTML(item.visaType)}</td>
           <td class="p-4">${getStatusBadge(item.status)}</td>
           <td class="p-4">
-            <button data-edit-id="${escapeHTML(item.id)}" class="edit-application-button bg-slate-700 hover:bg-blue-600 text-white text-xs px-3 py-1.5 rounded-lg transition flex items-center space-x-1">
-              <i data-lucide="edit-3" class="w-3.5 h-3.5"></i>
-              <span>Хариулах</span>
+            <button data-edit-id="${escapeHTML(item.id)}"
+              class="edit-application-button flex items-center gap-2 rounded-lg bg-blue-500/10 px-3 py-2 text-xs font-bold text-blue-300 hover:bg-blue-600 hover:text-white">
+              <i data-lucide="edit-3" class="h-3.5 w-3.5"></i>
+              Хариулах
             </button>
           </td>
         </tr>
@@ -559,9 +988,10 @@
         button.addEventListener("click", () => openEditModal(button.dataset.editId));
       });
 
-      lucide.createIcons();
+      refreshIcons();
     } catch (error) {
-      tbody.innerHTML = `<tr><td colspan="6" class="p-6 text-center text-red-400">${escapeHTML(error.message)}</td></tr>`;
+      tbody.innerHTML = `
+        <tr><td colspan="6" class="p-8 text-center text-red-300">${escapeHTML(error.message)}</td></tr>`;
     }
   }
 
@@ -573,6 +1003,7 @@
     document.getElementById("editTargetName").textContent = `${item.fullName} (${item.id})`;
     document.getElementById("editStatusSelect").value = item.status;
     document.getElementById("editResponseNote").value = item.note || "";
+
     hideMessage("editStatusError");
     openModal("editStatusModal");
   }
@@ -591,7 +1022,7 @@
       return;
     }
 
-    setButtonLoading("editStatusButton", true, "Шинэчилж байна...", "Шинэчлэх & Хэрэглэгчид Илгээх");
+    setButtonLoading("editStatusButton", true, "Хадгалж байна...", "Хадгалах");
 
     try {
       const data = await apiRequest(API_URL, {
@@ -612,54 +1043,37 @@
     } catch (error) {
       showMessage("editStatusError", error.message || "Төлөв шинэчлэхэд алдаа гарлаа.");
     } finally {
-      setButtonLoading("editStatusButton", false, "Шинэчилж байна...", "Шинэчлэх & Хэрэглэгчид Илгээх");
+      setButtonLoading("editStatusButton", false, "Хадгалж байна...", "Хадгалах");
     }
   }
 
-  // STATUS DISPLAY
-  function getStatusBadge(status) {
+  // STATUS BADGE
+  function getStatusBadge(status, large = false) {
     const styles = {
-      "Registered": "bg-slate-500/10 text-slate-400 border-slate-500/20",
-      "Documents Pending": "bg-amber-500/10 text-amber-400 border-amber-500/20",
-      "Documents Reviewing": "bg-blue-500/10 text-blue-400 border-blue-500/20",
-      "Correction Required": "bg-red-500/10 text-red-400 border-red-500/20",
-      "Ready for Submission": "bg-cyan-500/10 text-cyan-400 border-cyan-500/20",
-      "Submitted": "bg-purple-500/10 text-purple-400 border-purple-500/20",
-      "Decision Pending": "bg-indigo-500/10 text-indigo-400 border-indigo-500/20",
-      "Decision Received": "bg-emerald-500/10 text-emerald-400 border-emerald-500/20",
-      "Completed": "bg-emerald-600 text-white"
+      "Registered": "bg-slate-500/10 text-slate-300 border-slate-500/20",
+      "Documents Pending": "bg-amber-500/10 text-amber-300 border-amber-500/20",
+      "Documents Reviewing": "bg-blue-500/10 text-blue-300 border-blue-500/20",
+      "Correction Required": "bg-red-500/10 text-red-300 border-red-500/20",
+      "Ready for Submission": "bg-cyan-500/10 text-cyan-300 border-cyan-500/20",
+      "Submitted": "bg-purple-500/10 text-purple-300 border-purple-500/20",
+      "Decision Pending": "bg-indigo-500/10 text-indigo-300 border-indigo-500/20",
+      "Decision Received": "bg-emerald-500/10 text-emerald-300 border-emerald-500/20",
+      "Completed": "bg-emerald-600 text-white border-emerald-500"
     };
 
     const safeStatus = allowedStatuses.includes(status) ? status : "Registered";
-    return `<span class="px-2.5 py-1 rounded-full text-xs border font-medium ${styles[safeStatus]}">${escapeHTML(safeStatus)}</span>`;
-  }
+    const size = large ? "px-4 py-2 text-xs" : "px-2.5 py-1 text-[10px]";
 
-  function renderStatusSteps(currentStatus) {
-    const steps = [
-      "Registered",
-      "Documents Reviewing",
-      "Ready for Submission",
-      "Submitted",
-      "Decision Received"
-    ];
-
-    const currentIndex = steps.indexOf(currentStatus);
-    const currentStep = currentIndex >= 0 ? currentIndex : 0;
-
-    return steps.map((step, index) => {
-      const isDone = index <= currentStep;
-      return `
-        <div class="flex items-center space-x-3 text-xs">
-          <div class="w-5 h-5 rounded-full flex items-center justify-center shrink-0 ${isDone ? "bg-blue-500 text-white" : "bg-slate-700 text-slate-500"}">
-            ${isDone ? '<i data-lucide="check" class="w-3 h-3"></i>' : index + 1}
-          </div>
-          <span class="${isDone ? "text-slate-200 font-medium" : "text-slate-500"}">${escapeHTML(step)}</span>
-        </div>`;
-    }).join("");
+    return `
+      <span class="${size} inline-flex items-center gap-2 rounded-full border font-bold ${styles[safeStatus]}">
+        <span class="h-1.5 w-1.5 rounded-full bg-current"></span>
+        ${escapeHTML(statusLabels[safeStatus])}
+      </span>`;
   }
 
   // INITIALIZE
-  lucide.createIcons();
+  refreshIcons();
 </script>
+
 </body>
 </html>

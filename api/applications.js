@@ -134,20 +134,24 @@ module.exports = async function handler(req, res) {
           `${SUPABASE_URL}/rest/v1/visa_applications` +
           "?select=*&order=created_at.desc";
       } else {
-        const query = (url.searchParams.get("q") || "").trim();
+        const id = (url.searchParams.get("id") || "").trim();
+        const phone = (url.searchParams.get("phone") || "").trim();
 
-        if (!query || query.length > 120) {
+        if (
+          !/^VT-[0-9]{4}-[0-9]+$/i.test(id) ||
+          !phone ||
+          phone.length > 30
+        ) {
           return respond(res, 400, {
-            error: "ID эсвэл утасны дугаараа оруулна уу."
+            error: "Бүртгэлийн ID болон утасны дугаараа оруулна уу."
           });
         }
-
-        const column = /^VT-/i.test(query) ? "id" : "phone";
 
         endpoint =
           `${SUPABASE_URL}/rest/v1/visa_applications` +
           `?select=id,full_name,visa_type,status,note,updated_at` +
-          `&${column}=eq.${encodeURIComponent(query)}` +
+          `&id=eq.${encodeURIComponent(id)}` +
+          `&phone=eq.${encodeURIComponent(phone)}` +
           "&limit=1";
       }
 
@@ -175,7 +179,7 @@ module.exports = async function handler(req, res) {
       });
     }
 
-    // Админ хүсэлтийн төлөв шинэчлэх
+    // Админ төлөв шинэчлэх
     if (req.method === "PATCH") {
       if (!isAdmin(req)) {
         return respond(res, 401, {

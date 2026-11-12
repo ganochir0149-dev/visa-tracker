@@ -5,41 +5,43 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="theme-color" content="#081426">
-<title>VISA TRACKER — Korea Visa System</title>
+<title>VISA TRACKER | Korea Visa System</title>
 <script src="https://cdn.tailwindcss.com"></script>
 <script src="https://unpkg.com/lucide@latest"></script>
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
 *{box-sizing:border-box}
-body{font-family:Inter,sans-serif;background:radial-gradient(ellipse at 50% -10%,rgba(37,99,235,.22),transparent 48%),linear-gradient(145deg,#081426,#0d1b30 60%,#101d32);color:#f8fafc;min-height:100vh}
+body{font-family:Inter,sans-serif;background:radial-gradient(ellipse at 50% -10%,rgba(37,99,235,.2),transparent 48%),linear-gradient(145deg,#081426,#0d1b30 60%,#101d32);color:#f8fafc;min-height:100vh}
 button,input,select,textarea{font:inherit}
-.glass{background:rgba(17,35,60,.82);border:1px solid rgba(148,163,184,.16);backdrop-filter:blur(16px)}
-.primary-btn{background:linear-gradient(110deg,#2563eb,#0284c7);box-shadow:0 8px 24px rgba(37,99,235,.2)}
-.primary-btn:hover{transform:translateY(-1px)}
+.glass{background:rgba(17,35,60,.85);border:1px solid rgba(148,163,184,.16);backdrop-filter:blur(16px)}
+.primary-btn{background:linear-gradient(110deg,#2563eb,#0284c7);box-shadow:0 8px 24px rgba(37,99,235,.2);transition:.2s}
+.primary-btn:hover{filter:brightness(1.1);transform:translateY(-1px)}
+.primary-btn:disabled{opacity:.5;cursor:not-allowed;transform:none}
 .field{width:100%;min-height:46px;padding:12px 14px;background:#0a192d;color:white;border:1px solid rgba(148,163,184,.2);border-radius:12px;outline:none}
 .field:focus{border-color:#38bdf8;box-shadow:0 0 0 3px rgba(56,189,248,.12)}
 .field option{background:#10233b}
-.modal-backdrop{background:rgba(2,8,20,.84);backdrop-filter:blur(12px)}
-.modal-card{background:#13243b;border:1px solid rgba(148,163,184,.2);border-radius:22px;max-height:92vh;overflow-y:auto}
+.modal-backdrop{background:rgba(2,8,20,.86);backdrop-filter:blur(12px)}
+.modal-card{background:#13243b;border:1px solid rgba(148,163,184,.2);border-radius:22px;max-height:94vh;overflow-y:auto}
 .feature-card{background:linear-gradient(145deg,rgba(24,43,69,.92),rgba(15,29,49,.92));border:1px solid rgba(148,163,184,.16)}
 .score-track{height:10px;background:#263950;border-radius:99px;overflow:hidden}
-.score-fill{height:100%;border-radius:99px;transition:width .3s}
+.score-fill{height:100%;border-radius:99px;transition:width .4s}
 .admin-table th{white-space:nowrap;color:#94a3b8;font-size:11px;font-weight:600;text-transform:uppercase}
 .admin-table td{vertical-align:middle}
-.step-line{position:absolute;left:15px;top:32px;bottom:-12px;width:2px;background:#334155}
+.step{position:relative;display:flex;gap:14px;padding-bottom:23px}
+.step-line{position:absolute;left:15px;top:32px;bottom:-1px;width:2px;background:#334155}
 .step:last-child .step-line{display:none}
 .status-dot{width:31px;height:31px;display:flex;align-items:center;justify-content:center;border-radius:50%;position:relative;z-index:1;flex-shrink:0}
-@media(max-width:640px){.desktop-nav-label{display:none}.admin-table{min-width:850px}}
+.file-box{border:1px dashed rgba(56,189,248,.35);background:rgba(14,165,233,.04);border-radius:15px;padding:18px}
+@media(max-width:640px){.admin-table{min-width:850px}}
 </style>
 </head>
 <body class="flex min-h-screen flex-col">
 
-<!-- HEADER -->
-<header class="sticky top-0 z-40 border-b border-slate-700/50 bg-slate-950/80 backdrop-blur-xl">
+<header class="sticky top-0 z-40 border-b border-slate-700/50 bg-slate-950/85 backdrop-blur-xl">
 <div class="mx-auto flex min-h-[76px] max-w-7xl items-center justify-between gap-3 px-4 sm:px-6">
 <button onclick="switchTab('public')" class="flex items-center gap-3 text-left">
 <span class="flex h-11 w-11 items-center justify-center rounded-2xl bg-gradient-to-r from-blue-600 to-cyan-600">
-<i data-lucide="plane-takeoff" class="h-6 w-6 text-white"></i>
+<i data-lucide="plane-takeoff" class="h-6 w-6"></i>
 </span>
 <span>
 <span class="block text-lg font-extrabold">VISA<span class="text-cyan-400">TRACKER</span></span>
@@ -48,26 +50,26 @@ button,input,select,textarea{font:inherit}
 </button>
 <nav class="flex items-center gap-2">
 <button id="adminNavBtn" onclick="openAdminWithCheck()" class="hidden items-center gap-2 rounded-xl border border-blue-500/30 bg-blue-500/10 px-3 py-2 text-xs text-blue-300">
-<i data-lucide="shield-check" class="h-4 w-4"></i><span class="desktop-nav-label">Админ</span>
+<i data-lucide="shield-check" class="h-4 w-4"></i> Админ
 </button>
 <button onclick="switchTab('public')" class="rounded-xl px-3 py-2 text-xs text-slate-300 hover:bg-white/5">
-<i data-lucide="search" class="inline h-4 w-4"></i><span class="desktop-nav-label"> Явц хайх</span>
+<i data-lucide="search" class="inline h-4 w-4"></i> Явц хайх
 </button>
-<button onclick="openModal('newAppModal')" class="primary-btn rounded-xl px-3 py-2.5 text-xs font-bold text-white">
+<button onclick="openModal('newAppModal')" class="primary-btn rounded-xl px-3 py-2.5 text-xs font-bold">
 <i data-lucide="plus" class="inline h-4 w-4"></i> Хүсэлт илгээх
 </button>
 </nav>
 </div>
 </header>
 
-<!-- PUBLIC SECTION -->
+<!-- PUBLIC -->
 <main id="publicSection" class="mx-auto w-full max-w-7xl flex-1 px-4 py-8 sm:px-6 sm:py-12">
 <section class="glass relative mx-auto max-w-5xl overflow-hidden rounded-[28px] px-5 py-12 text-center sm:px-12 sm:py-16">
 <div class="pointer-events-none absolute -right-20 -top-24 h-72 w-72 rounded-full bg-blue-500/10 blur-3xl"></div>
 <div class="relative z-10">
 <span class="mb-5 inline-flex rounded-full border border-cyan-400/20 bg-cyan-400/10 px-4 py-2 text-[10px] font-bold tracking-widest text-cyan-300">KOREA VISA APPLICATION TRACKING</span>
 <h1 class="mx-auto max-w-3xl text-3xl font-extrabold leading-tight sm:text-5xl">БНСУ-ын визний <span class="text-cyan-300">явцаа хянах</span> систем</h1>
-<p class="mx-auto mt-5 max-w-xl text-sm leading-7 text-slate-400">Бүртгэлийн ID болон утасны дугаараа ашиглан хүсэлтийнхээ шинэчилсэн мэдээллийг шалгана уу.</p>
+<p class="mx-auto mt-5 max-w-xl text-sm leading-7 text-slate-400">Бүртгэлийн ID болон утасны дугаараа ашиглан хүсэлтийнхээ явц, үнэлгээг шалгана уу.</p>
 
 <div class="mx-auto mt-9 max-w-md space-y-3 text-left">
 <label class="block text-xs font-semibold text-slate-300">Бүртгэлийн дугаар</label>
@@ -77,7 +79,6 @@ button,input,select,textarea{font:inherit}
 <button id="searchButton" onclick="searchApplication()" class="primary-btn flex min-h-[50px] w-full items-center justify-center gap-2 rounded-xl text-sm font-bold">
 <i data-lucide="search" class="h-4 w-4"></i> Хүсэлтийн явц шалгах
 </button>
-<p class="text-center text-[10px] text-slate-500">Таны мэдээлэл зөвхөн тохирох бүртгэлийг олоход ашиглагдана.</p>
 </div>
 </div>
 </section>
@@ -89,29 +90,27 @@ button,input,select,textarea{font:inherit}
 <i data-lucide="file-check-2" class="mb-4 h-8 w-8 text-blue-400"></i>
 <p class="text-[10px] font-bold tracking-widest text-blue-400">01 / REGISTER</p>
 <h3 class="mt-2 font-bold">Хүсэлт бүртгүүлэх</h3>
-<p class="mt-2 text-xs leading-6 text-slate-400">Хүсэлтээ илгээж, бүртгэлийн дугаараа авна.</p>
+<p class="mt-2 text-xs leading-6 text-slate-400">Хувийн мэдээлэл болон материалаа илгээнэ.</p>
 </article>
 <article class="feature-card rounded-2xl p-6">
 <i data-lucide="refresh-cw" class="mb-4 h-8 w-8 text-purple-400"></i>
 <p class="text-[10px] font-bold tracking-widest text-purple-400">02 / TRACK</p>
 <h3 class="mt-2 font-bold">Явцаа хянах</h3>
-<p class="mt-2 text-xs leading-6 text-slate-400">Хүсэлтийн төлөв болон ажилтны тайлбарыг харна.</p>
+<p class="mt-2 text-xs leading-6 text-slate-400">Хүсэлтийн төлөв, ажилтны тайлбарыг харна.</p>
 </article>
 <article class="feature-card rounded-2xl p-6">
 <i data-lucide="chart-no-axes-column-increasing" class="mb-4 h-8 w-8 text-emerald-400"></i>
 <p class="text-[10px] font-bold tracking-widest text-emerald-400">03 / ASSESSMENT</p>
-<h3 class="mt-2 font-bold">Урьдчилсан үнэлгээ</h3>
-<p class="mt-2 text-xs leading-6 text-slate-400">Оруулсан мэдээлэлд тулгуурлан 100 онооны үнэлгээ гаргана.</p>
+<h3 class="mt-2 font-bold">Үнэлгээ авах</h3>
+<p class="mt-2 text-xs leading-6 text-slate-400">Материал илгээсний дараа 100 онооны урьдчилсан үнэлгээ гарна.</p>
 </article>
 </section>
 
 <section class="mx-auto mt-10 max-w-5xl rounded-2xl border border-blue-400/10 bg-blue-500/[.06] p-5">
 <div class="flex gap-4">
 <i data-lucide="info" class="h-6 w-6 shrink-0 text-blue-300"></i>
-<div>
-<h3 class="text-sm font-bold">Мэдээлэл</h3>
-<p class="mt-1 text-xs leading-6 text-slate-400">Урьдчилсан үнэлгээ нь материалын бэлэн байдал болон эрсдэлийн дотоод үнэлгээ юм. Виз олгох шийдвэрийг зөвхөн эрх бүхий байгууллага гаргана.</p>
-</div>
+<div><h3 class="text-sm font-bold">Үнэлгээний тухай</h3>
+<p class="mt-1 text-xs leading-6 text-slate-400">Оноо нь хэрэглэгчийн өгсөн мэдээлэл болон ирүүлсэн баримтын үнэлгээнд үндэслэнэ. Энэ нь виз олгогдох бодит магадлал биш бөгөөд албан ёсны шийдвэрийг эрх бүхий байгууллага гаргана.</p></div>
 </div>
 </section>
 </main>
@@ -130,7 +129,7 @@ button,input,select,textarea{font:inherit}
 <!-- ADMIN DASHBOARD -->
 <main id="adminSection" class="mx-auto hidden w-full max-w-7xl flex-1 px-4 py-8 sm:px-6">
 <div class="mb-7 flex flex-wrap items-center justify-between gap-4 border-b border-slate-700/50 pb-6">
-<div><h1 class="text-2xl font-extrabold">Админ удирдлага</h1><p class="mt-2 text-xs text-slate-400">Визний хүсэлтүүдийг хянах, үнэлгээ харах, төлөв шинэчлэх</p></div>
+<div><h1 class="text-2xl font-extrabold">Админ удирдлага</h1><p class="mt-2 text-xs text-slate-400">Хүсэлтүүд, материал болон үнэлгээг хянах</p></div>
 <div class="flex gap-2">
 <button onclick="renderAdminTable()" class="rounded-xl border border-slate-600 bg-slate-800 px-4 py-2 text-xs">Шинэчлэх</button>
 <button onclick="adminLogout()" class="rounded-xl border border-red-500/20 bg-red-500/10 px-4 py-2 text-xs text-red-300">Гарах</button>
@@ -154,14 +153,14 @@ button,input,select,textarea{font:inherit}
 </section>
 </main>
 
-<!-- NEW APPLICATION -->
+<!-- NEW APPLICATION MODAL -->
 <div id="newAppModal" class="modal-backdrop fixed inset-0 z-50 hidden items-center justify-center p-4">
 <div class="modal-card relative w-full max-w-2xl p-6 sm:p-7">
 <button onclick="closeModal('newAppModal')" class="absolute right-4 top-4 text-slate-400"><i data-lucide="x"></i></button>
 <h2 class="text-xl font-extrabold">Шинэ визний хүсэлт</h2>
-<p class="mt-2 text-xs text-slate-400">Мэдээллээ үнэн зөв бөглөнө үү.</p>
+<p class="mt-2 text-xs text-slate-400">Хувийн мэдээлэл болон материалаа бүрэн оруулна уу.</p>
 
-<form id="newAppForm" onsubmit="handleNewApplication(event)" class="mt-6 space-y-4">
+<form id="newAppForm" onsubmit="handleNewApplication(event)" class="mt-6 space-y-5" enctype="multipart/form-data">
 <div class="grid gap-3 sm:grid-cols-2">
 <div><label class="mb-2 block text-xs">Овог нэр *</label><input id="appFullName" required maxlength="120" class="field" placeholder="Овог нэр"></div>
 <div><label class="mb-2 block text-xs">Утасны дугаар *</label><input id="appPhone" required maxlength="30" class="field" placeholder="99112233"></div>
@@ -176,74 +175,59 @@ button,input,select,textarea{font:inherit}
 </div>
 
 <div class="border-t border-slate-700/60 pt-5">
-<h3 class="font-bold">Урьдчилсан үнэлгээ</h3>
-<p class="mt-1 text-xs leading-5 text-slate-400">Доорх 7 үзүүлэлтийг сонгоход систем таны оноог автоматаар бодно.</p>
-<div class="mt-4 grid gap-4 sm:grid-cols-2">
-
-<div><label class="mb-2 block text-xs">1. Санхүүгийн боломж (20 оноо)</label>
-<select id="assessFinance" required class="field assessment-input">
-<option value="">Сонгох</option><option value="20">Зардлаа бүрэн нотлох боломжтой — 20</option><option value="14">Ихэнх зардлаа нотлох боломжтой — 14</option><option value="7">Нотлох баримт хязгаарлагдмал — 7</option><option value="0">Одоогоор нотлох боломжгүй — 0</option>
-</select></div>
-
-<div><label class="mb-2 block text-xs">2. Ажил, орлого (15 оноо)</label>
-<select id="assessEmployment" required class="field assessment-input">
-<option value="">Сонгох</option><option value="15">Тогтмол ажил/бизнес, орлого нотлогдоно — 15</option><option value="10">Тогтмол орлоготой ч баримт дутуу — 10</option><option value="5">Түр / тогтворгүй ажил — 5</option><option value="0">Одоогоор ажил, орлогогүй — 0</option>
-</select></div>
-
-<div><label class="mb-2 block text-xs">3. Монгол Улстай холбоо (20 оноо)</label>
-<select id="assessTies" required class="field assessment-input">
-<option value="">Сонгох</option><option value="20">Ажил, гэр бүл, хөрөнгө зэрэг холбоо нотлогдоно — 20</option><option value="14">Холбоо байгаа ч баримт хэсэгчилсэн — 14</option><option value="7">Буцах холбоо тодорхой бус — 7</option><option value="0">Одоогоор нотлох боломжгүй — 0</option>
-</select></div>
-
-<div><label class="mb-2 block text-xs">4. Өмнөх аяллын түүх (10 оноо)</label>
-<select id="assessTravel" required class="field assessment-input">
-<option value="">Сонгох</option><option value="10">Аяллын түүхтэй, хугацаандаа буцаж байсан — 10</option><option value="7">Анх удаа зорчих гэж байгаа — 7</option><option value="3">Түүхээ нотлох баримт дутуу — 3</option><option value="0">Хугацаа хэтрүүлж байсан — 0</option>
-</select></div>
-
-<div><label class="mb-2 block text-xs">5. Материалын бүрдэл (15 оноо)</label>
-<select id="assessDocuments" required class="field assessment-input">
-<option value="">Сонгох</option><option value="15">Бүх материал бэлэн, хүчинтэй — 15</option><option value="10">Ихэнх материал бэлэн — 10</option><option value="5">Олон материал дутуу — 5</option><option value="0">Материал бүрдээгүй — 0</option>
-</select></div>
-
-<div><label class="mb-2 block text-xs">6. Аяллын зорилго (10 оноо)</label>
-<select id="assessPurpose" required class="field assessment-input">
-<option value="">Сонгох</option><option value="10">Зорилго, хугацаа, төлөвлөгөө тодорхой — 10</option><option value="7">Зорилго тодорхой, төлөвлөгөө дутуу — 7</option><option value="3">Тайлбар ерөнхий — 3</option><option value="0">Зорилго тодорхойгүй — 0</option>
-</select></div>
-
-<div class="sm:col-span-2"><label class="mb-2 block text-xs">7. Өмнөх визний түүх (10 оноо)</label>
-<select id="assessVisaHistory" required class="field assessment-input">
-<option value="">Сонгох</option><option value="10">Татгалзалт, визний зөрчилгүй — 10</option><option value="7">Өмнө татгалзсан ч шалтгааныг арилгасан — 7</option><option value="3">Татгалзалтын шалтгаан тодорхойгүй — 3</option><option value="0">Визний нөхцөл зөрчиж байсан — 0</option>
-</select></div>
+<h3 class="font-bold">Материал хавсаргах</h3>
+<p class="mt-1 text-xs leading-5 text-slate-400">Шаардлагатай баримтуудаа PDF, JPG эсвэл PNG хэлбэрээр хавсаргана.</p>
+<div class="file-box mt-4">
+<label class="flex cursor-pointer flex-col items-center gap-3 text-center">
+<i data-lucide="cloud-upload" class="h-9 w-9 text-cyan-400"></i>
+<span class="text-sm font-semibold">Материалаа сонгох</span>
+<span class="text-[10px] text-slate-500">PDF, JPG, JPEG, PNG · Нэг файл 10MB хүртэл</span>
+<input id="applicationFiles" type="file" accept=".pdf,.jpg,.jpeg,.png,application/pdf,image/jpeg,image/png" multiple required class="mt-2 w-full text-xs text-slate-400">
+</label>
 </div>
-
-<div id="assessmentPreview" class="mt-5 rounded-2xl border border-cyan-500/20 bg-cyan-500/5 p-4">
-<div class="flex items-center justify-between gap-3">
-<div><p class="text-[10px] font-bold tracking-wider text-cyan-300">ТАНЫ УРЬДЧИЛСАН ҮНЭЛГЭЭ</p><p id="assessmentScore" class="mt-1 text-3xl font-extrabold">— / 100</p></div>
-<span id="assessmentLevel" class="rounded-full bg-slate-700 px-3 py-1 text-[10px]">Мэдээлэл хүлээж байна</span>
-</div>
-<div class="score-track mt-4"><div id="assessmentBar" class="score-fill bg-cyan-400" style="width:0%"></div></div>
-<p id="assessmentMessage" class="mt-3 text-xs leading-5 text-slate-400">Бүх үзүүлэлтийг бөглөсний дараа үнэлгээ гарна.</p>
-<ul id="assessmentAdvice" class="mt-2 list-disc space-y-1 pl-5 text-xs text-amber-300"></ul>
-<p class="mt-4 border-t border-slate-700/50 pt-3 text-[10px] leading-5 text-slate-500">Энэ нь дотоод урьдчилсан оноо болохоос виз гарах магадлалын хувь биш. Албан ёсны визний шийдвэрийг Элчин сайдын яам гаргана.</p>
-</div>
+<div id="selectedFiles" class="mt-3 space-y-2 text-xs text-slate-400"></div>
 </div>
 
 <div id="newAppError" class="hidden rounded-xl border border-red-500/20 bg-red-500/10 p-3 text-xs text-red-300"></div>
 <div class="flex gap-2 pt-2">
 <button type="button" onclick="closeModal('newAppModal')" class="flex-1 rounded-xl bg-slate-700 py-3 text-xs font-bold">Цуцлах</button>
-<button id="newAppSubmitButton" type="submit" class="primary-btn flex-1 rounded-xl py-3 text-xs font-bold">Хүсэлт илгээх</button>
+<button id="newAppSubmitButton" type="submit" class="primary-btn flex-1 rounded-xl py-3 text-xs font-bold">Материал илгээх</button>
 </div>
 </form>
 </div>
 </div>
 
-<!-- EDIT STATUS -->
+<!-- RESULT MODAL -->
+<div id="assessmentResultModal" class="modal-backdrop fixed inset-0 z-[60] hidden items-center justify-center p-4">
+<div class="modal-card w-full max-w-md p-7 text-center">
+<div class="mx-auto flex h-14 w-14 items-center justify-center rounded-full bg-emerald-500/10 text-emerald-400"><i data-lucide="check-circle-2" class="h-8 w-8"></i></div>
+<h2 class="mt-4 text-xl font-extrabold">Хүсэлт амжилттай илгээгдлээ</h2>
+<p class="mt-2 text-xs leading-6 text-slate-400">Таны материал бүртгэгдлээ. Урьдчилсан үнэлгээ:</p>
+<div class="my-5 rounded-2xl border border-cyan-500/20 bg-cyan-500/5 p-5">
+<p class="text-[10px] font-bold tracking-widest text-cyan-300">УРЬДЧИЛСАН ҮНЭЛГЭЭ</p>
+<p id="resultScore" class="mt-2 text-5xl font-extrabold text-white">—</p>
+<p class="mt-1 text-xs text-slate-400">/ 100 оноо</p>
+<div class="score-track mt-4"><div id="resultBar" class="score-fill bg-cyan-400" style="width:0%"></div></div>
+<p id="resultCategory" class="mt-4 text-sm font-bold text-cyan-300"></p>
+<p id="resultDescription" class="mt-2 text-xs leading-5 text-slate-400"></p>
+</div>
+<div class="rounded-xl bg-slate-950/50 p-4 text-left">
+<p class="text-[10px] text-slate-500">ТАНЫ БҮРТГЭЛИЙН ДУГААР</p>
+<p id="resultApplicationId" class="mt-2 font-mono text-lg font-bold text-cyan-300"></p>
+</div>
+<p class="mt-4 text-[10px] leading-5 text-slate-500">Энэ оноо нь бодит виз гарах магадлал биш. Албан ёсны шийдвэрийг эрх бүхий байгууллага гаргана.</p>
+<button onclick="closeModal('assessmentResultModal')" class="primary-btn mt-5 w-full rounded-xl py-3 text-sm font-bold">Ойлголоо</button>
+</div>
+</div>
+
+<!-- EDIT STATUS MODAL -->
 <div id="editStatusModal" class="modal-backdrop fixed inset-0 z-50 hidden items-center justify-center p-4">
 <div class="modal-card relative w-full max-w-lg p-6">
 <button onclick="closeModal('editStatusModal')" class="absolute right-4 top-4 text-slate-400"><i data-lucide="x"></i></button>
 <h3 class="text-xl font-extrabold">Хүсэлт шинэчлэх</h3>
 <p id="editTargetName" class="mt-3 text-sm text-cyan-300"></p>
 <div id="editAssessment" class="mt-4"></div>
+<div id="editDocuments" class="mt-4"></div>
 <form onsubmit="handleStatusUpdate(event)" class="mt-5 space-y-4">
 <input type="hidden" id="editAppId">
 <div><label class="mb-2 block text-xs">Шинэ төлөв</label>
@@ -266,14 +250,21 @@ button,input,select,textarea{font:inherit}
 </div>
 
 <footer class="mt-12 border-t border-slate-700/40 bg-slate-950/70 py-7 text-center text-xs text-slate-500">
-<span id="secretFooterTrigger" onclick="handleSecretClick()" class="cursor-pointer">VISA TRACKER © 2026. All rights reserved.</span>
+<span onclick="handleSecretClick()" class="cursor-pointer">VISA TRACKER © 2026. All rights reserved.</span>
 </footer>
 
 <script>
 const API_URL="/api/applications";
-let isAdminLoggedIn=false,adminPassword="",adminApplications=[],secretClickCount=0,searchRequestController=null;
+let isAdminLoggedIn=false;
+let adminPassword="";
+let adminApplications=[];
+let secretClickCount=0;
 
-const allowedStatuses=["Registered","Documents Pending","Documents Reviewing","Correction Required","Ready for Submission","Submitted","Decision Pending","Decision Received","Completed"];
+const allowedStatuses=[
+"Registered","Documents Pending","Documents Reviewing",
+"Correction Required","Ready for Submission","Submitted",
+"Decision Pending","Decision Received","Completed"
+];
 
 const statusLabels={
 Registered:"Хүсэлт бүртгэгдсэн",
@@ -287,26 +278,21 @@ Submitted:"Элчин / KVAC-д хүргүүлсэн",
 Completed:"Үйлчилгээ дууссан"
 };
 
-const progressSteps=["Registered","Documents Reviewing","Ready for Submission","Submitted","Decision Received"];
-
-const assessmentFields=[
-["assessFinance",20,"Санхүү"],
-["assessEmployment",15,"Ажил, орлого"],
-["assessTies",20,"Монгол Улстай холбоо"],
-["assessTravel",10,"Аяллын түүх"],
-["assessDocuments",15,"Материалын бүрдэл"],
-["assessPurpose",10,"Аяллын зорилго"],
-["assessVisaHistory",10,"Өмнөх визний түүх"]
+const progressSteps=[
+"Registered","Documents Reviewing","Ready for Submission",
+"Submitted","Decision Received"
 ];
 
 function escapeHTML(value){
-return String(value??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+return String(value??"").replace(/[&<>"']/g,c=>({
+"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"
+}[c]));
 }
 
 async function apiRequest(url,options={}){
-const response=await fetch(url,{...options,headers:{...(options.headers||{})}});
+const response=await fetch(url,options);
 let data={};
-try{data=await response.json()}catch{throw new Error("Серверээс зөв хариу ирсэнгүй.")}
+try{data=await response.json()}catch{}
 if(!response.ok)throw new Error(data.error||`Алдаа гарлаа (${response.status}).`);
 return data;
 }
@@ -317,23 +303,28 @@ if(!button)return;
 button.disabled=loading;
 button.textContent=loading?loadingText:normalText;
 }
+
 function showMessage(id,message){
 const el=document.getElementById(id);
 el.textContent=message;
 el.classList.remove("hidden");
 }
+
 function hideMessage(id){
 document.getElementById(id)?.classList.add("hidden");
 }
+
 function refreshIcons(){
 if(window.lucide)lucide.createIcons();
 }
+
 function openModal(id){
 const modal=document.getElementById(id);
 modal.classList.remove("hidden");
 modal.classList.add("flex");
 refreshIcons();
 }
+
 function closeModal(id){
 const modal=document.getElementById(id);
 if(!modal)return;
@@ -341,17 +332,35 @@ modal.classList.add("hidden");
 modal.classList.remove("flex");
 }
 
-function handleSecretClick(){
-secretClickCount++;
-if(secretClickCount>=5){secretClickCount=0;openAdminWithCheck();}
-}
 document.addEventListener("keydown",event=>{
 if((event.ctrlKey||event.metaKey)&&event.shiftKey&&event.key.toLowerCase()==="a"){
 event.preventDefault();openAdminWithCheck();
 }
-if(event.key==="Escape")["newAppModal","adminLoginModal","editStatusModal"].forEach(closeModal);
+if(event.key==="Escape"){
+["newAppModal","adminLoginModal","editStatusModal","assessmentResultModal"].forEach(closeModal);
+}
 });
 
+function handleSecretClick(){
+secretClickCount++;
+if(secretClickCount>=5){secretClickCount=0;openAdminWithCheck();}
+}
+
+/* NAVIGATION */
+function switchTab(tab){
+if(tab==="admin"){
+if(!isAdminLoggedIn)return openModal("adminLoginModal");
+document.getElementById("publicSection").classList.add("hidden");
+document.getElementById("adminSection").classList.remove("hidden");
+renderAdminTable();
+}else{
+document.getElementById("adminSection").classList.add("hidden");
+document.getElementById("publicSection").classList.remove("hidden");
+}
+window.scrollTo({top:0,behavior:"smooth"});
+}
+
+/* ADMIN LOGIN */
 function openAdminWithCheck(){
 if(isAdminLoggedIn)switchTab("admin");
 else{
@@ -366,132 +375,194 @@ if(!password)return showMessage("loginError","Нууц үгээ оруулна �
 hideMessage("loginError");
 setButtonLoading("adminLoginButton",true,"Шалгаж байна...","Нэвтрэх");
 try{
-const data=await apiRequest(`${API_URL}?admin=1`,{headers:{"x-admin-password":password}});
+const data=await apiRequest(`${API_URL}?admin=1`,{
+headers:{"x-admin-password":password}
+});
 adminPassword=password;
 adminApplications=data.applications||[];
 isAdminLoggedIn=true;
 document.getElementById("adminPinInput").value="";
-closeModal("adminLoginModal");
 document.getElementById("adminNavBtn").classList.remove("hidden");
+closeModal("adminLoginModal");
 switchTab("admin");
-}catch(error){showMessage("loginError",error.message);}
-finally{setButtonLoading("adminLoginButton",false,"Шалгаж байна...","Нэвтрэх");}
+}catch(error){
+showMessage("loginError",error.message);
+}finally{
+setButtonLoading("adminLoginButton",false,"Шалгаж байна...","Нэвтрэх");
+}
 }
 
 function adminLogout(){
-isAdminLoggedIn=false;adminPassword="";adminApplications=[];
+isAdminLoggedIn=false;
+adminPassword="";
+adminApplications=[];
 document.getElementById("adminNavBtn").classList.add("hidden");
 switchTab("public");
 }
 
-function switchTab(tab){
-if(tab==="admin"){
-if(!isAdminLoggedIn)return openModal("adminLoginModal");
-document.getElementById("publicSection").classList.add("hidden");
-document.getElementById("adminSection").classList.remove("hidden");
-renderAdminTable();
-}else{
-document.getElementById("adminSection").classList.add("hidden");
-document.getElementById("publicSection").classList.remove("hidden");
-}
-window.scrollTo({top:0,behavior:"smooth"});
-}
-
-/* 100 POINT PRELIMINARY ASSESSMENT */
-function calculateAssessment(){
-const factors={};
-const breakdown=[];
-let completed=0,total=0;
-
-assessmentFields.forEach(([id,max,label])=>{
-const field=document.getElementById(id);
-const raw=field?.value??"";
-if(raw!==""){
-const score=Number(raw);
-factors[id]=score;
-total+=score;
-completed++;
-breakdown.push({key:id,name:label,score,max});
-}
-});
-
-const complete=completed===assessmentFields.length;
-const score=complete?Math.max(1,Math.min(100,total)):null;
-
-let level="Мэдээлэл дутуу";
-let message="Бүх үзүүлэлтийг бөглөсний дараа үнэлгээ гарна.";
-if(complete){
-if(score>=80){level="Сайн үзүүлэлт";message="Оруулсан мэдээллээр материалын бэлэн байдал харьцангуй сайн байна.";}
-else if(score>=60){level="Боломжийн үзүүлэлт";message="Зарим үзүүлэлтээ сайжруулж, нотлох баримтаа нягтлах боломжтой.";}
-else if(score>=40){level="Сайжруулах шаардлагатай";message="Материал болон нотлох баримтаа сайжруулах шаардлагатай.";}
-else{level="Эрсдэл өндөр";message="Оруулсан мэдээлэлд хэд хэдэн сул үзүүлэлт байна. Мэргэжлийн хүнээр нягтлуулахыг зөвлөе.";}
-}
-
-const improvements=breakdown.filter(x=>x.score/x.max<0.6).map(x=>x.name);
-return{
-method:"weighted_readiness_score_v1",
-score,
-category:level,
-description:message,
-completedSections:completed,
-totalSections:assessmentFields.length,
-factors,
-breakdown,
-improvements,
-weights:{finance:20,employment:15,ties:20,travelHistory:10,documents:15,purpose:10,visaHistory:10},
-approvalProbability:null,
-probabilityStatus:"unavailable_no_validated_historical_model",
-disclaimer:"Internal preliminary readiness score only. Not an official Korean visa criterion or approval probability."
-};
-}
-
-function updateAssessmentPreview(){
-const result=calculateAssessment();
-const scoreEl=document.getElementById("assessmentScore");
-const levelEl=document.getElementById("assessmentLevel");
-const bar=document.getElementById("assessmentBar");
-const message=document.getElementById("assessmentMessage");
-const advice=document.getElementById("assessmentAdvice");
-
-if(!result.score){
-scoreEl.textContent=`${result.breakdown.reduce((a,x)=>a+x.score,0)} / 100`;
-levelEl.textContent=`${result.completedSections}/7 бөглөсөн`;
-bar.style.width="0%";
-message.textContent="Бүх 7 үзүүлэлтийг бөглөсний дараа эцсийн оноо гарна.";
-advice.innerHTML="";
+/* FILE INPUT */
+document.getElementById("applicationFiles").addEventListener("change",function(){
+const files=Array.from(this.files);
+const container=document.getElementById("selectedFiles");
+container.innerHTML="";
+const allowed=["application/pdf","image/jpeg","image/png"];
+let total=0;
+for(const file of files){
+total+=file.size;
+if(!allowed.includes(file.type)){
+container.innerHTML=`<p class="text-red-300">Зөвхөн PDF, JPG, PNG файл оруулна уу.</p>`;
+this.value="";
 return;
 }
+if(file.size>10*1024*1024){
+container.innerHTML=`<p class="text-red-300">${escapeHTML(file.name)} файл 10MB-аас их байна.</p>`;
+this.value="";
+return;
+}
+}
+if(total>30*1024*1024){
+container.innerHTML=`<p class="text-red-300">Нийт файлын хэмжээ 30MB-аас хэтэрлээ.</p>`;
+this.value="";
+return;
+}
+container.innerHTML=files.map(file=>`
+<div class="flex items-center justify-between gap-2 rounded-lg bg-slate-950/40 p-3">
+<span class="truncate">${escapeHTML(file.name)}</span>
+<span class="shrink-0 text-cyan-300">${(file.size/1024/1024).toFixed(2)} MB</span>
+</div>`).join("");
+});
 
-scoreEl.textContent=`${result.score} / 100`;
-levelEl.textContent=result.category;
-bar.style.width=result.score+"%";
-bar.className="score-fill "+(result.score>=80?"bg-emerald-400":result.score>=60?"bg-cyan-400":result.score>=40?"bg-amber-400":"bg-red-400");
-message.textContent=result.description;
-advice.innerHTML=result.improvements.length
-?result.improvements.map(x=>`<li>${escapeHTML(x)} үзүүлэлтээ сайжруулахыг зөвлөж байна.</li>`).join("")
-:"<li>Одоогийн сонголтоор сул үзүүлэлт илрээгүй.</li>";
+/* ASSESSMENT
+   Server must calculate the final score from submitted information/documents.
+   This frontend only displays the server response.
+*/
+function getAssessmentScore(assessment){
+const score=Number(assessment?.score);
+if(!Number.isFinite(score))return null;
+return Math.max(1,Math.min(100,Math.round(score)));
+}
+
+function assessmentCategory(score){
+if(score>=80)return "Сайн үзүүлэлт";
+if(score>=60)return "Боломжийн үзүүлэлт";
+if(score>=40)return "Сайжруулах шаардлагатай";
+return "Эрсдэл өндөр";
 }
 
 function renderAssessmentDetails(assessment){
-if(!assessment||!Number.isFinite(Number(assessment.score)))return `<p class="text-xs text-slate-400">Үнэлгээний мэдээлэл байхгүй.</p>`;
+const score=getAssessmentScore(assessment);
+if(score===null)return `<p class="text-xs text-slate-400">Үнэлгээ хараахан гараагүй байна.</p>`;
 const items=Array.isArray(assessment.breakdown)?assessment.breakdown:[];
 return `
 <div class="rounded-xl border border-cyan-500/20 bg-cyan-500/5 p-4">
-<div class="flex items-center justify-between"><span class="text-xs font-bold text-cyan-300">УРЬДЧИЛСАН ҮНЭЛГЭЭ</span><strong class="text-2xl text-white">${escapeHTML(assessment.score)} / 100</strong></div>
-<p class="mt-1 text-xs text-slate-300">${escapeHTML(assessment.category||"Үнэлгээ")}</p>
-<div class="score-track mt-3"><div class="score-fill bg-cyan-400" style="width:${Math.max(0,Math.min(100,Number(assessment.score)))}%"></div></div>
+<div class="flex items-center justify-between">
+<span class="text-xs font-bold text-cyan-300">УРЬДЧИЛСАН ҮНЭЛГЭЭ</span>
+<strong class="text-2xl">${score}/100</strong>
+</div>
+<div class="score-track mt-3"><div class="score-fill bg-cyan-400" style="width:${score}%"></div></div>
+<p class="mt-3 text-xs font-bold text-cyan-300">${escapeHTML(assessment.category||assessmentCategory(score))}</p>
+<p class="mt-2 text-xs leading-5 text-slate-400">${escapeHTML(assessment.description||"Оруулсан мэдээлэлд үндэслэсэн үнэлгээ.")}</p>
 <div class="mt-4 space-y-2">
-${items.map(x=>`<div class="flex justify-between gap-2 text-xs"><span class="text-slate-300">${escapeHTML(x.name)}</span><strong>${escapeHTML(x.score)}/${escapeHTML(x.max)}</strong></div>`).join("")}
+${items.map(x=>`
+<div class="flex justify-between gap-2 text-xs">
+<span class="text-slate-300">${escapeHTML(x.name)}</span>
+<strong>${escapeHTML(x.score)}/${escapeHTML(x.max)}</strong>
+</div>`).join("")}
 </div>
 ${assessment.improvements?.length?`<p class="mt-3 text-xs text-amber-300">Сайжруулах: ${assessment.improvements.map(escapeHTML).join(", ")}</p>`:""}
-<p class="mt-3 border-t border-slate-700 pt-3 text-[10px] leading-5 text-slate-500">Энэ оноо нь бодит виз гарах магадлал биш.</p>
+<p class="mt-3 border-t border-slate-700 pt-3 text-[10px] leading-5 text-slate-500">Энэ оноо нь виз олгогдох бодит магадлал биш.</p>
 </div>`;
 }
 
-/* LIVE ASSESSMENT */
-document.querySelectorAll(".assessment-input").forEach(field=>{
-field.addEventListener("change",updateAssessmentPreview);
+function showAssessmentResult(application){
+const assessment=application.assessment||{};
+const score=getAssessmentScore(assessment);
+if(score===null){
+alert("Таны материал бүртгэгдсэн. Үнэлгээ хараахан бэлэн болоогүй байна.");
+return;
+}
+document.getElementById("resultScore").textContent=score;
+document.getElementById("resultBar").style.width=score+"%";
+document.getElementById("resultCategory").textContent=assessment.category||assessmentCategory(score);
+document.getElementById("resultDescription").textContent=assessment.description||"Оруулсан мэдээлэлд үндэслэсэн урьдчилсан үнэлгээ.";
+document.getElementById("resultApplicationId").textContent=application.id;
+openModal("assessmentResultModal");
+}
+
+/* REGISTER AFTER DOCUMENT SUBMISSION */
+async function handleNewApplication(event){
+event.preventDefault();
+hideMessage("newAppError");
+
+const fullName=document.getElementById("appFullName").value.trim();
+const phone=document.getElementById("appPhone").value.trim();
+const visaType=document.getElementById("appVisaType").value;
+const files=document.getElementById("applicationFiles").files;
+
+if(!fullName||!phone){
+showMessage("newAppError","Мэдээллээ бүрэн бөглөнө үү.");
+return;
+}
+if(!files.length){
+showMessage("newAppError","Материалаа хавсаргана уу.");
+return;
+}
+
+const formData=new FormData();
+formData.append("fullName",fullName);
+formData.append("phone",phone);
+formData.append("visaType",visaType);
+for(const file of files){
+formData.append("documents",file);
+}
+
+setButtonLoading("newAppSubmitButton",true,"Материал илгээж байна...","Материал илгээх");
+
+try{
+/* 1. Send application and files to server */
+const response=await fetch(API_URL,{
+method:"POST",
+body:formData
 });
+let data={};
+try{data=await response.json()}catch{}
+if(!response.ok)throw new Error(data.error||"Материал илгээхэд алдаа гарлаа.");
+
+if(!data.application?.id){
+throw new Error("Сервер бүртгэлийн дугаар буцаасангүй.");
+}
+
+/* 2. Ask backend to assess the submitted documents */
+const assessmentData=await apiRequest(`${API_URL}/assessment`,{
+method:"POST",
+headers:{"Content-Type":"application/json"},
+body:JSON.stringify({
+applicationId:data.application.id,
+phone
+})
+});
+
+/* 3. Only show the result after successful server assessment */
+const application={
+...data.application,
+assessment:assessmentData.assessment
+};
+
+closeModal("newAppModal");
+document.getElementById("newAppForm").reset();
+document.getElementById("selectedFiles").innerHTML="";
+
+showAssessmentResult(application);
+
+document.getElementById("searchInput").value=application.id;
+document.getElementById("searchPhoneInput").value=phone;
+
+}catch(error){
+showMessage("newAppError",error.message);
+}finally{
+setButtonLoading("newAppSubmitButton",false,"Материал илгээж байна...","Материал илгээх");
+}
+}
 
 /* PUBLIC SEARCH */
 async function searchApplication(){
@@ -502,26 +573,26 @@ const defaults=document.getElementById("defaultState");
 const button=document.getElementById("searchButton");
 
 if(!id||!phone){
-result.classList.remove("hidden");defaults.classList.add("hidden");
-result.innerHTML=`<div class="glass rounded-2xl p-6 text-center text-amber-300">ID болон утасны дугаараа хоёуланг нь оруулна уу.</div>`;
+result.classList.remove("hidden");
+defaults.classList.add("hidden");
+result.innerHTML=`<div class="glass rounded-2xl p-6 text-center text-amber-300">ID болон утасны дугаараа оруулна уу.</div>`;
 return;
 }
-if(searchRequestController)searchRequestController.abort();
-searchRequestController=new AbortController();
-button.disabled=true;button.textContent="Шалгаж байна...";
-result.classList.remove("hidden");defaults.classList.add("hidden");
+button.disabled=true;
+button.textContent="Шалгаж байна...";
+result.classList.remove("hidden");
+defaults.classList.add("hidden");
 result.innerHTML=`<div class="glass rounded-2xl p-8 text-center text-slate-400">Мэдээлэл шалгаж байна...</div>`;
 
 try{
 const params=new URLSearchParams({id,phone});
-const data=await apiRequest(`${API_URL}?${params}`,{signal:searchRequestController.signal});
+const data=await apiRequest(`${API_URL}?${params}`);
 if(!data.application){
-result.innerHTML=`<div class="glass rounded-2xl p-8 text-center"><h3 class="font-bold">Хүсэлт олдсонгүй</h3><p class="mt-2 text-xs text-slate-400">ID болон утасны дугаараа дахин шалгана уу.</p></div>`;
+result.innerHTML=`<div class="glass rounded-2xl p-8 text-center"><h3 class="font-bold">Хүсэлт олдсонгүй</h3><p class="mt-2 text-xs text-slate-400">ID болон утасны дугаараа шалгана уу.</p></div>`;
 return;
 }
 renderSearchResult(data.application);
 }catch(error){
-if(error.name==="AbortError")return;
 result.innerHTML=`<div class="glass rounded-2xl p-6 text-center text-red-300">${escapeHTML(error.message)}</div>`;
 }finally{
 button.disabled=false;
@@ -536,22 +607,33 @@ document.getElementById("searchResult").innerHTML=`
 <section class="glass overflow-hidden rounded-3xl">
 <div class="border-b border-slate-700/50 bg-gradient-to-r from-blue-500/10 to-cyan-500/5 p-6 sm:p-8">
 <div class="flex flex-wrap items-center justify-between gap-4">
-<div><p class="text-[10px] tracking-widest text-cyan-400">APPLICATION DETAILS</p>
+<div>
+<p class="text-[10px] tracking-widest text-cyan-400">APPLICATION DETAILS</p>
 <h2 class="mt-2 text-2xl font-extrabold">${escapeHTML(application.fullName)}</h2>
 <p class="mt-2 font-mono text-xs text-blue-300">${escapeHTML(application.id)}</p>
-<p class="mt-2 text-xs text-slate-400">${escapeHTML(application.visaType)}</p></div>
-${getStatusBadge(status,true)}
+<p class="mt-2 text-xs text-slate-400">${escapeHTML(application.visaType)}</p>
+</div>${getStatusBadge(status,true)}
 </div></div>
 <div class="grid gap-6 p-6 md:grid-cols-2">
-<div><h3 class="mb-3 text-xs font-bold text-slate-300">СҮҮЛИЙН ХАРИУ / ТАЙЛБАР</h3>
+<div>
+<h3 class="mb-3 text-xs font-bold text-slate-300">СҮҮЛИЙН ТАЙЛБАР</h3>
 <div class="rounded-xl border border-slate-700 bg-slate-950/30 p-4">
 <p class="whitespace-pre-wrap text-sm leading-7">${escapeHTML(application.note||"Одоогоор нэмэлт тайлбар бичигдээгүй байна.")}</p>
 <p class="mt-3 border-t border-slate-700 pt-3 text-[10px] text-slate-500">Шинэчилсэн: ${escapeHTML(application.updatedAt||"Мэдээлэлгүй")}</p>
-</div></div>
-<div><h3 class="mb-3 text-xs font-bold text-slate-300">ВИЗНИЙ ПРОЦЕСС</h3>
-<div class="rounded-xl bg-slate-950/30 p-4">${renderStatusSteps(status)}</div></div>
 </div>
-${application.assessment?`<div class="border-t border-slate-700/50 p-6">${renderAssessmentDetails(application.assessment)}</div>`:""}
+</div>
+<div>
+<h3 class="mb-3 text-xs font-bold text-slate-300">ВИЗНИЙ ПРОЦЕСС</h3>
+<div class="rounded-xl bg-slate-950/30 p-4">${renderStatusSteps(status)}</div>
+</div>
+</div>
+<div class="border-t border-slate-700/50 p-6">
+${application.assessment?renderAssessmentDetails(application.assessment):`
+<div class="rounded-xl border border-amber-500/20 bg-amber-500/5 p-4">
+<p class="text-sm font-bold text-amber-300">Үнэлгээ хүлээгдэж байна</p>
+<p class="mt-2 text-xs text-slate-400">Таны материалыг бүртгэсэн. Үнэлгээ хараахан бэлэн болоогүй байна.</p>
+</div>`}
+</div>
 </section>`;
 refreshIcons();
 }
@@ -561,62 +643,25 @@ let index=progressSteps.indexOf(currentStatus);
 if(index<0)index=0;
 return progressSteps.map((step,i)=>{
 const done=i<=index,current=i===index;
-return `<div class="step relative flex gap-4 pb-6">
+return `<div class="step">
 <div class="step-line"></div>
 <div class="status-dot ${done?"bg-blue-600 text-white":"bg-slate-700 text-slate-400"}">${done?'<i data-lucide="check" class="h-4 w-4"></i>':i+1}</div>
-<div class="pt-1"><p class="text-xs font-bold ${done?"text-white":"text-slate-500"}">${escapeHTML(statusLabels[step])}</p>
-${current?'<span class="mt-1 inline-block text-[9px] text-cyan-400">ОДООГИЙН ҮЕ ШАТ</span>':""}</div>
-</div>`;
+<div class="pt-1">
+<p class="text-xs font-bold ${done?"text-white":"text-slate-500"}">${escapeHTML(statusLabels[step])}</p>
+${current?'<span class="mt-1 inline-block text-[9px] text-cyan-400">ОДООГИЙН ҮЕ ШАТ</span>':""}
+</div></div>`;
 }).join("");
 }
 
-/* REGISTER NEW APPLICATION */
-async function handleNewApplication(event){
-event.preventDefault();
-hideMessage("newAppError");
-
-const fullName=document.getElementById("appFullName").value.trim();
-const phone=document.getElementById("appPhone").value.trim();
-const visaType=document.getElementById("appVisaType").value;
-const assessment=calculateAssessment();
-
-if(!fullName||!phone){
-showMessage("newAppError","Шаардлагатай мэдээллээ бүрэн оруулна уу.");
-return;
-}
-if(!assessment.score){
-showMessage("newAppError","Үнэлгээний 7 үзүүлэлтийг бүгдийг бөглөнө үү.");
-return;
-}
-
-setButtonLoading("newAppSubmitButton",true,"Илгээж байна...","Хүсэлт илгээх");
-try{
-const data=await apiRequest(API_URL,{
-method:"POST",
-headers:{"Content-Type":"application/json"},
-body:JSON.stringify({fullName,phone,visaType,assessment})
-});
-const application=data.application;
-if(!application?.id)throw new Error("Хүсэлт хадгалагдсан эсэхийг баталгаажуулж чадсангүй.");
-
-closeModal("newAppModal");
-document.getElementById("newAppForm").reset();
-updateAssessmentPreview();
-document.getElementById("searchInput").value=application.id;
-document.getElementById("searchPhoneInput").value=phone;
-await searchApplication();
-alert(`Таны хүсэлт амжилттай бүртгэгдлээ.\n\nБүртгэлийн ID: ${application.id}\n\nЭнэ дугаарыг хадгалж аваарай.`);
-}catch(error){showMessage("newAppError",error.message||"Хүсэлт илгээхэд алдаа гарлаа.");}
-finally{setButtonLoading("newAppSubmitButton",false,"Илгээж байна...","Хүсэлт илгээх");}
-}
-
-/* ADMIN TABLE */
+/* ADMIN */
 async function renderAdminTable(){
 if(!isAdminLoggedIn||!adminPassword)return;
 const tbody=document.getElementById("adminTableBody");
 tbody.innerHTML=`<tr><td colspan="7" class="p-8 text-center text-slate-400">Ачаалж байна...</td></tr>`;
 try{
-const data=await apiRequest(`${API_URL}?admin=1`,{headers:{"x-admin-password":adminPassword}});
+const data=await apiRequest(`${API_URL}?admin=1`,{
+headers:{"x-admin-password":adminPassword}
+});
 adminApplications=data.applications||[];
 const total=adminApplications.length;
 const completed=adminApplications.filter(x=>x.status==="Completed").length;
@@ -630,19 +675,23 @@ if(!total){
 tbody.innerHTML=`<tr><td colspan="7" class="p-8 text-center text-slate-400">Одоогоор хүсэлт бүртгэгдээгүй байна.</td></tr>`;
 return;
 }
+
 tbody.innerHTML=adminApplications.map(item=>{
-const score=Number.isFinite(Number(item.assessment?.score))?item.assessment.score:"—";
+const score=getAssessmentScore(item.assessment);
 return `<tr>
 <td class="p-4 font-mono text-xs text-cyan-300">${escapeHTML(item.id)}</td>
 <td class="p-4 text-xs font-semibold">${escapeHTML(item.fullName)}</td>
 <td class="p-4 text-xs text-slate-400">${escapeHTML(item.phone)}</td>
 <td class="p-4 text-xs">${escapeHTML(item.visaType)}</td>
-<td class="p-4 text-sm font-bold text-cyan-300">${escapeHTML(score)}${score!=="—"?"/100":""}</td>
+<td class="p-4 text-sm font-bold text-cyan-300">${score===null?"Хүлээгдэж байна":score+"/100"}</td>
 <td class="p-4">${getStatusBadge(item.status)}</td>
 <td class="p-4"><button data-edit-id="${escapeHTML(item.id)}" class="edit-button rounded-lg bg-blue-500/10 px-3 py-2 text-xs font-bold text-blue-300">Харах / Засах</button></td>
 </tr>`;
 }).join("");
-tbody.querySelectorAll(".edit-button").forEach(button=>button.addEventListener("click",()=>openEditModal(button.dataset.editId)));
+
+tbody.querySelectorAll(".edit-button").forEach(button=>{
+button.addEventListener("click",()=>openEditModal(button.dataset.editId));
+});
 refreshIcons();
 }catch(error){
 tbody.innerHTML=`<tr><td colspan="7" class="p-8 text-center text-red-300">${escapeHTML(error.message)}</td></tr>`;
@@ -657,6 +706,14 @@ document.getElementById("editTargetName").textContent=`${item.fullName} (${item.
 document.getElementById("editStatusSelect").value=item.status||"Registered";
 document.getElementById("editResponseNote").value=item.note||"";
 document.getElementById("editAssessment").innerHTML=renderAssessmentDetails(item.assessment);
+
+const docs=Array.isArray(item.documents)?item.documents:[];
+document.getElementById("editDocuments").innerHTML=`
+<p class="mb-2 text-xs font-bold text-slate-300">Хавсаргасан материал</p>
+${docs.length?docs.map(doc=>`
+<div class="mb-2 rounded-lg bg-slate-950/40 p-3 text-xs">
+${doc.url?`<a class="text-cyan-300 underline" href="${escapeHTML(doc.url)}" target="_blank" rel="noopener noreferrer">${escapeHTML(doc.name||"Материал харах")}</a>`:escapeHTML(doc.name||"Материал")}
+</div>`).join(""):'<p class="text-xs text-slate-500">Материалын жагсаалт байхгүй.</p>'}`;
 hideMessage("editStatusError");
 openModal("editStatusModal");
 }
@@ -667,22 +724,22 @@ hideMessage("editStatusError");
 const id=document.getElementById("editAppId").value;
 const status=document.getElementById("editStatusSelect").value;
 const note=document.getElementById("editResponseNote").value;
-if(!allowedStatuses.includes(status)){
-showMessage("editStatusError","Төлөвийн сонголт буруу байна.");
-return;
-}
+if(!allowedStatuses.includes(status))return showMessage("editStatusError","Төлөв буруу байна.");
+
 setButtonLoading("editStatusButton",true,"Хадгалж байна...","Хадгалах");
 try{
-const data=await apiRequest(API_URL,{
+await apiRequest(API_URL,{
 method:"PATCH",
 headers:{"Content-Type":"application/json","x-admin-password":adminPassword},
 body:JSON.stringify({id,status,note})
 });
-if(!data.application)throw new Error("Хүсэлт олдсонгүй эсвэл шинэчлэгдсэнгүй.");
 closeModal("editStatusModal");
 await renderAdminTable();
-}catch(error){showMessage("editStatusError",error.message);}
-finally{setButtonLoading("editStatusButton",false,"Хадгалж байна...","Хадгалах");}
+}catch(error){
+showMessage("editStatusError",error.message);
+}finally{
+setButtonLoading("editStatusButton",false,"Хадгалж байна...","Хадгалах");
+}
 }
 
 function getStatusBadge(status,large=false){
@@ -702,7 +759,6 @@ return `<span class="inline-flex items-center rounded-full border ${styles[safe]
 }
 
 /* INITIALIZE */
-updateAssessmentPreview();
 refreshIcons();
 </script>
 </body>
